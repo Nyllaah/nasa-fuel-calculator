@@ -1,0 +1,45 @@
+---
+description: WebSocket communication patterns for client and server
+globs: apps/{client,server}/**/*.{ts,tsx}
+alwaysApply: false
+---
+
+# WebSocket Protocol
+
+## Request (client → server)
+
+```json
+{
+  "mass": 28801,
+  "flight_path": [
+    { "action": "launch", "planet": "earth" },
+    { "action": "land", "planet": "moon" }
+  ]
+}
+```
+
+## Response (server → client)
+
+```json
+{
+  "total_fuel": 51898,
+  "breakdown": [
+    { "action": "launch", "planet": "earth", "fuel": 0 }
+  ]
+}
+```
+
+## Server
+
+- Validate incoming payloads (positive mass, valid actions/planets, non-empty path).
+- Call `fuel-core` for calculation; never implement formulas inline.
+- Respond on every valid message.
+
+## Client
+
+- Maintain persistent WebSocket connection.
+- Reconnect on disconnect with backoff.
+- Send updated payload on every input change.
+- Handle in-flight and error states in the UI.
+
+WebSocket is the primary communication channel — no REST submit endpoint.

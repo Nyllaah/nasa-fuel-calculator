@@ -1,0 +1,35 @@
+---
+description: React and Vite frontend patterns for the client app
+globs: apps/client/**/*.{ts,tsx}
+alwaysApply: false
+---
+
+# React + Vite Frontend
+
+- Functional components only.
+- Extract a `useFuelCalculator` hook for WebSocket connection and message handling.
+- Debounce or throttle WS sends if needed, but every input change must trigger a recalculation.
+
+## UI Requirements
+
+- Dynamic flight path builder: add/remove steps, select action (launch/land) and planet per step.
+- Spacecraft mass input with client-side validation (positive number, required selections).
+- Display total fuel and per-step breakdown.
+- No submit button — results update instantly via WebSocket.
+
+## Patterns
+
+```typescript
+// ✅ Hook encapsulates WS lifecycle
+function useFuelCalculator() {
+  const [result, setResult] = useState<FuelResult | null>(null);
+  // connect, send on input change, handle reconnect
+  return { result, sendCalculation };
+}
+
+// ❌ Fuel formulas in client
+const fuel = mass * 9.807 * 0.042 - 33;
+```
+
+- Treat server response as source of truth for fuel numbers.
+- Show loading/error states during in-flight calculations.

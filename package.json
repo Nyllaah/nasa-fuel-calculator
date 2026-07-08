@@ -1,0 +1,14 @@
+{
+  "name": "nasa-fuel-calculator",
+  "private": true,
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "build:packages": "npm run build -w @nasa-fuel/shared -w @nasa-fuel/fuel-core",
+    "dev": "npm run dev --workspaces --if-present",
+    "build": "npm run build:packages && npm run build --workspaces --if-present",
+    "test": "npm run build:packages && npm run test --workspaces --if-present"
+  }
+}

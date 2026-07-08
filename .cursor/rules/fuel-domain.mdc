@@ -1,0 +1,42 @@
+---
+description: Fuel calculation domain rules for fuel-core package
+globs: packages/fuel-core/**
+alwaysApply: false
+---
+
+# Fuel Domain Logic
+
+## Formulas (use Math.floor)
+
+```typescript
+// Launch
+Math.floor(mass * gravity * 0.042 - 33)
+
+// Land
+Math.floor(mass * gravity * 0.033 - 42)
+```
+
+## Recursive Fuel-for-Fuel
+
+Fuel adds weight. Calculate additional fuel with the same formula recursively until additional fuel <= 0.
+
+```typescript
+// Landing 28801 kg on Earth (g = 9.807) → 13447 total fuel
+// 9278 + 2960 + 915 + 254 + 40 = 13447
+```
+
+## Planet Gravity (m/s²)
+
+- earth: 9.807
+- moon: 1.62
+- mars: 3.711
+
+## Flight Path Processing
+
+Process steps **in reverse order**. Later legs don't carry fuel from earlier legs, but earlier legs must carry fuel for all subsequent legs. Add each step's fuel to running mass for preceding steps.
+
+## Implementation
+
+- Export pure functions with explicit return types.
+- No I/O, no WebSocket, no React in this package.
+- All acceptance scenarios must pass via Vitest.

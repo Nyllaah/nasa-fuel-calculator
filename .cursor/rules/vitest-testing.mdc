@@ -1,0 +1,30 @@
+---
+description: Vitest testing requirements for fuel calculation logic
+globs: "**/*.{test,spec}.{ts,tsx}"
+alwaysApply: false
+---
+
+# Vitest Testing
+
+Primary test target: `packages/fuel-core`.
+
+## Required Acceptance Cases
+
+```typescript
+// Apollo 11 — mass 28801 → total 51898
+// Mars Mission — mass 14606 → total 33388
+// Passenger Ship — mass 75432 → total 212161
+```
+
+## Edge Cases
+
+- Recursive fuel stops when additional fuel is 0 or negative.
+- Single-step flight paths.
+- Each planet/action combination (launch/land × earth/moon/mars).
+
+## Conventions
+
+- Co-locate tests with source: `calculate.test.ts` next to `calculate.ts`.
+- Use descriptive `it` blocks: `it('calculates Apollo 11 mission fuel', ...)`.
+- Test pure functions directly — no WebSocket or DOM in fuel-core tests.
+- Full coverage is not required; focus on recursive logic and acceptance scenarios.
