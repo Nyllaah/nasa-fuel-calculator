@@ -2,6 +2,23 @@
 
 Interplanetary fuel calculator for the NEX Energy full-stack code challenge. Users build flight paths, enter spacecraft mass, and see fuel calculations update in real time over WebSockets.
 
+## Tech Stack
+
+| Layer | Technology |
+| ----- | ---------- |
+| Monorepo | npm workspaces |
+| Language | TypeScript (strict) |
+| Frontend | React, Vite |
+| Backend | Node.js, WebSockets (`ws`) |
+| Validation | Zod (server) |
+| Testing | Vitest (`packages/fuel-core`) |
+| Formatting | Prettier (no semicolons) |
+| Linting | ESLint (monorepo root) |
+
+**Runtime:** Node.js with native ESM (`"type": "module"`). Packages compile with `tsc`; the client bundles with Vite.
+
+**Real-time:** Persistent WebSocket connection between client and server — no REST submit flow.
+
 ## Monorepo Layout
 
 ```text
