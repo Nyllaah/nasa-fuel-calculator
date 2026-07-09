@@ -17,6 +17,8 @@ const ui = {
   SPACECRAFT_MASS: 'Massa seca da nave',
   MASS_HINT: 'Carga útil + estrutura, sem propelente',
   KG: 'KG',
+  CALCULATING: 'Calculando…',
+  WAITING_CONNECTION: 'Aguardando conexão com o servidor…',
   MISSION_ANALYSIS: 'Análise da missão',
   SELECT_ROUTE_PROMPT: 'Selecione origem e destino para calcular o combustível necessário.',
   TOTAL_PROPELLANT: 'Propelente total necessário',

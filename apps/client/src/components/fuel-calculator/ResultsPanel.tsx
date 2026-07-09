@@ -1,7 +1,8 @@
 import { AnimatePresence, motion } from 'framer-motion'
-import { Activity, AlertTriangle } from 'lucide-react'
+import { Activity, AlertTriangle, Loader2 } from 'lucide-react'
 import type { FuelResponse } from '@nasa-fuel/shared'
 import { PlanetOrb } from '@/components/fuel-calculator/PlanetOrb'
+import type { ConnectionStatus } from '@/hooks/useWebSocket'
 import { actionLabel, ui } from '@/constants/ui'
 import { formatKg } from '@/lib/format'
 import { PLANET_CONFIG } from '@/lib/planetConfig'
@@ -11,18 +12,33 @@ type ResultsPanelProps = {
   result: FuelResponse | null
   error: string | null
   allFilled: boolean
+  isCalculating: boolean
+  status: ConnectionStatus
 }
 
-function ResultsPanel({ result, error, allFilled }: ResultsPanelProps) {
+function ResultsPanel({
+  result,
+  error,
+  allFilled,
+  isCalculating,
+  status,
+}: ResultsPanelProps) {
   const empty = !allFilled
+  const offline = allFilled && status !== 'connected'
 
   return (
-    <div className="fc-panel">
-      {result && !error && <div className="fc-scanline" aria-hidden />}
+    <div className={cn('fc-panel', isCalculating && result && 'fc-panel-loading')}>
+      {result && !error && !isCalculating && <div className="fc-scanline" aria-hidden />}
 
       <div className="fc-label">
         <Activity size={14} className="text-[#00d4ff]" />
         {ui.MISSION_ANALYSIS}
+        {isCalculating && (
+          <span className="fc-calculating-badge">
+            <Loader2 size={12} className="animate-spin" />
+            {ui.CALCULATING}
+          </span>
+        )}
       </div>
 
       <AnimatePresence mode="wait">
@@ -37,6 +53,16 @@ function ResultsPanel({ result, error, allFilled }: ResultsPanelProps) {
             <AlertTriangle size={20} className="text-red-500" />
             <span className="fc-error">{error}</span>
           </motion.div>
+        ) : offline ? (
+          <motion.p
+            key="offline"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fc-body"
+          >
+            {ui.WAITING_CONNECTION}
+          </motion.p>
         ) : empty ? (
           <motion.p
             key="empty"
@@ -53,7 +79,7 @@ function ResultsPanel({ result, error, allFilled }: ResultsPanelProps) {
             initial={{ opacity: 0, y: 8 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0 }}
-            className="flex flex-col gap-4"
+            className={cn('flex flex-col gap-4', isCalculating && 'opacity-60')}
           >
             <div className="text-center">
               <p className="fc-fuel-label">{ui.TOTAL_PROPELLANT}</p>
@@ -87,6 +113,17 @@ function ResultsPanel({ result, error, allFilled }: ResultsPanelProps) {
                 )
               })}
             </div>
+          </motion.div>
+        ) : isCalculating ? (
+          <motion.div
+            key="loading"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="flex items-center gap-2.5"
+          >
+            <Loader2 size={18} className="animate-spin text-[#00d4ff]" />
+            <span className="fc-body">{ui.CALCULATING}</span>
           </motion.div>
         ) : null}
       </AnimatePresence>

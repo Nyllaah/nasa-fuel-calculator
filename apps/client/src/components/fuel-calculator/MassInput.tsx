@@ -1,4 +1,7 @@
+import { errors } from '@/constants/errors'
 import { ui } from '@/constants/ui'
+import { isValidMass } from '@/lib/mass'
+import { cn } from '@/lib/utils'
 
 type MassInputProps = {
   mass: string
@@ -6,6 +9,8 @@ type MassInputProps = {
 }
 
 function MassInput({ mass, onMassChange }: MassInputProps) {
+  const invalid = !isValidMass(mass)
+
   return (
     <div className="fc-panel-sm">
       <label htmlFor="spacecraft-mass" className="fc-field-label">
@@ -18,11 +23,18 @@ function MassInput({ mass, onMassChange }: MassInputProps) {
           value={mass}
           onChange={(event) => onMassChange(event.target.value)}
           min={1}
-          className="fc-mass-input"
+          aria-invalid={invalid}
+          className={cn('fc-mass-input', invalid && 'fc-mass-input-invalid')}
         />
         <span className="fc-unit">{ui.KG}</span>
       </div>
-      <p className="fc-hint">{ui.MASS_HINT}</p>
+      {invalid ? (
+        <p className="fc-field-error" role="alert">
+          {errors.INVALID_MASS}
+        </p>
+      ) : (
+        <p className="fc-hint">{ui.MASS_HINT}</p>
+      )}
     </div>
   )
 }

@@ -15,7 +15,7 @@ import { isFuelError, isFuelResponse } from '@/lib/parseFuelMessage'
 import { isWaypointRouteReady, isWaypointsComplete, waypointsToFlightPath } from '@/lib/waypoints'
 
 function FuelCalculator() {
-  const { mass, setMass, setFlightPath, result, status, error } = useFuelCalculator()
+  const { mass, setMass, setFlightPath, result, status, error, isCalculating } = useFuelCalculator()
 
   const [waypoints, setWaypoints] = useState<(Planet | null)[]>([null, null])
   const [dragging, setDragging] = useState<Planet | null>(null)
@@ -155,7 +155,13 @@ function FuelCalculator() {
         <div className="fc-sidebar">
           <MassInput mass={mass} onMassChange={setMass} />
           <div className="flex-1">
-            <ResultsPanel result={fuelResult} error={displayError} allFilled={allFilled} />
+            <ResultsPanel
+              result={fuelResult}
+              error={displayError}
+              allFilled={allFilled}
+              isCalculating={isCalculating}
+              status={status}
+            />
           </div>
         </div>
 

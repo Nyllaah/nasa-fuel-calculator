@@ -1,13 +1,14 @@
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import type { FlightStep, FuelRequest } from '@nasa-fuel/shared'
 import { WS_URL } from '@/config'
 import { useFuelMessage } from '@/hooks/useFuelMessage'
 import { useWebSocket } from '@/hooks/useWebSocket'
+import { parseMass } from '@/lib/mass'
 
 function buildRequest(mass: string, flightPath: FlightStep[]): FuelRequest | null {
-  const massNum = Number(mass)
+  const massNum = parseMass(mass)
 
-  if (!Number.isFinite(massNum) || massNum <= 0 || flightPath.length === 0) {
+  if (massNum === null || flightPath.length === 0) {
     return null
   }
 
@@ -17,8 +18,17 @@ function buildRequest(mass: string, flightPath: FlightStep[]): FuelRequest | nul
 export function useFuelCalculator() {
   const [mass, setMass] = useState('28801')
   const [flightPath, setFlightPath] = useState<FlightStep[]>([])
+  const [isCalculating, setIsCalculating] = useState(false)
 
   const { result, error: messageError, handleMessage } = useFuelMessage()
+
+  const onMessage = useCallback(
+    (data: string) => {
+      handleMessage(data)
+      setIsCalculating(false)
+    },
+    [handleMessage],
+  )
 
   const {
     status,
@@ -26,19 +36,26 @@ export function useFuelCalculator() {
     send,
   } = useWebSocket({
     url: WS_URL,
-    onMessage: handleMessage,
+    onMessage,
   })
 
   const error = connectionError ?? messageError
 
   useEffect(() => {
-    if (status !== 'connected') return
+    if (status !== 'connected') {
+      setIsCalculating(false)
+      return
+    }
 
     const request = buildRequest(mass, flightPath)
 
     if (request) {
+      setIsCalculating(true)
       send(request)
+      return
     }
+
+    setIsCalculating(false)
   }, [status, mass, flightPath, send])
 
   return {
@@ -46,6 +63,7 @@ export function useFuelCalculator() {
     result,
     status,
     error,
+    isCalculating,
     setMass,
     setFlightPath,
   }

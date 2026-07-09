@@ -64,6 +64,14 @@
     @apply relative flex min-h-40 flex-col gap-4 overflow-hidden rounded-[20px] border border-white/10 bg-[rgb(8_4_30/0.7)] px-7 py-6 backdrop-blur-md;
   }
 
+  .fc-panel-loading {
+    @apply border-[#00d4ff]/20;
+  }
+
+  .fc-calculating-badge {
+    @apply ml-auto flex items-center gap-1.5 font-rajdhani text-[10px] tracking-wide text-[#00d4ff]/70;
+  }
+
   .fc-label {
     @apply flex items-center gap-2 font-orbitron text-[11px] tracking-[0.2em] text-white/40 uppercase;
   }
@@ -147,6 +155,14 @@
 
   .fc-mass-input {
     @apply w-full flex-1 border-0 border-b-2 border-[#00d4ff]/35 bg-transparent py-1 text-right font-orbitron text-[28px] text-white outline-none focus:border-[#00d4ff];
+  }
+
+  .fc-mass-input-invalid {
+    @apply border-red-500/50 text-red-300 focus:border-red-500;
+  }
+
+  .fc-field-error {
+    @apply mt-1.5 font-rajdhani text-[11px] tracking-wide text-red-400;
   }
 
   .fc-hint {
