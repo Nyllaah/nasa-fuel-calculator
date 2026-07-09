@@ -1,45 +1,23 @@
 ---
-description: WebSocket communication patterns for client and server
+description: WebSocket patterns for client and server
 globs: apps/{client,server}/**/*.{ts,tsx}
 alwaysApply: false
 ---
 
-# WebSocket Protocol
+# WebSocket
 
-## Request (client → server)
+Message shapes and field names → [AGENTS.md](../../AGENTS.md).
 
-```json
-{
-  "mass": 28801,
-  "flight_path": [
-    { "action": "launch", "planet": "earth" },
-    { "action": "land", "planet": "moon" }
-  ]
-}
-```
+## Server (`apps/server`)
 
-## Response (server → client)
+- Validate with Zod, errors from `constants/errors.ts` (`errors.INVALID_*`)
+- Delegate calculation to `@nasa-fuel/fuel-core`
+- Respond on every message; check `socket.readyState` before send
 
-```json
-{
-  "total_fuel": 51898,
-  "breakdown": [
-    { "action": "launch", "planet": "earth", "fuel": 0 }
-  ]
-}
-```
+## Client (`apps/client`)
 
-## Server
+- Persistent connection; reconnect on disconnect
+- Send updated payload on every input change
+- Handle `{ error: string }` and `{ totalFuel, breakdown }` responses
 
-- Validate incoming payloads (positive mass, valid actions/planets, non-empty path).
-- Call `fuel-core` for calculation; never implement formulas inline.
-- Respond on every valid message.
-
-## Client
-
-- Maintain persistent WebSocket connection.
-- Reconnect on disconnect with backoff.
-- Send updated payload on every input change.
-- Handle in-flight and error states in the UI.
-
-WebSocket is the primary communication channel — no REST submit endpoint.
+No REST submit endpoint.

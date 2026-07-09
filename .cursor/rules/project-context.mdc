@@ -1,31 +1,16 @@
 ---
-description: NASA Fuel Calculator project context and architecture boundaries
+description: NASA Fuel Calculator — always read AGENTS.md for full context
 alwaysApply: true
 ---
 
 # Project Context
 
-NASA interplanetary fuel calculator (NEX Energy code challenge). Monorepo with npm workspaces:
+NASA interplanetary fuel calculator (NEX Energy challenge). **See [AGENTS.md](../../AGENTS.md) for all domain rules, WS contract, acceptance tests, and commands.**
 
-- `apps/client` — Vite + React SPA
-- `apps/server` — Node.js WebSocket server
-- `packages/fuel-core` — pure fuel calculation logic
-- `packages/shared` — types and planet constants
+## Non-negotiable boundaries
 
-## Rules
-
-- Fuel logic lives in `packages/fuel-core` only. Never duplicate formulas in client or server.
-- Server is thin transport: validate input, call `fuel-core`, return results.
-- Client has no calculation logic; server is the source of truth for fuel numbers.
-- Real-time is required: persistent WebSocket, no manual submit button.
-- Updates must fire on every input change (mass, flight steps, planet/action).
-
-## Acceptance Values
-
-| Mission        | Mass   | Total Fuel |
-|----------------|--------|------------|
-| Apollo 11      | 28,801 | 51,898     |
-| Mars Mission   | 14,606 | 33,388     |
-| Passenger Ship | 75,432 | 212,161    |
-
-See `AGENTS.md` for full domain rules and WS contract.
+- Fuel logic → `packages/fuel-core` only
+- Types/domain constants → `packages/shared`
+- Validation + error messages → `apps/server`
+- UI only → `apps/client` (no fuel formulas)
+- Real-time WebSocket, no submit button

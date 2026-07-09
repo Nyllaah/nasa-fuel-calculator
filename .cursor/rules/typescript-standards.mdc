@@ -1,31 +1,19 @@
 ---
-description: TypeScript coding standards for the monorepo
+description: TypeScript conventions for the monorepo
 globs: **/*.{ts,tsx}
 alwaysApply: false
 ---
 
 # TypeScript Standards
 
-- Enable strict mode in all `tsconfig.json` files.
-- Use explicit return types on exported functions.
-- Import shared types from `@nasa-fuel/shared` — do not redefine WS message shapes locally.
+Details → [AGENTS.md](../../AGENTS.md) (naming, architecture).
 
-## Patterns
+- Strict mode in all `tsconfig.json` files
+- Import shared types from `@nasa-fuel/shared` — do not redefine message shapes
+- `SCREAMING_SNAKE` keys for constant maps (`errors`, `FUEL_FORMULA`); `camelCase` elsewhere
+- Business logic pure; side effects only at boundaries (WS handlers, React hooks)
 
 ```typescript
-// ✅ Pure calculation function
-export function calculateStepFuel(mass: number, action: Action, planet: Planet): number {
-  const gravity = GRAVITY[planet];
-  const raw = action === 'launch'
-    ? mass * gravity * 0.042 - 33
-    : mass * gravity * 0.033 - 42;
-  return Math.floor(raw);
-}
-
 // ❌ Side effects in fuel-core
 export function calculateAndSend(ws: WebSocket, mass: number): void { ... }
 ```
-
-- Keep business logic pure; side effects only at boundaries (WS handlers, React hooks).
-- Prefer `type` over `interface` for simple data shapes unless extension is needed.
-- Use `as const` for literal unions (actions, planets).

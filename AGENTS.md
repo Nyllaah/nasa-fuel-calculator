@@ -1,5 +1,7 @@
 # NASA Fuel Calculator — Agent Guide
 
+Canonical reference for agents and contributors. Cursor rules are thin pointers to this file — do not duplicate content there.
+
 Interplanetary fuel calculator for the NEX Energy full-stack code challenge. Users build flight paths, enter spacecraft mass, and see fuel calculations update in real time over WebSockets.
 
 ## Tech Stack
@@ -25,36 +27,49 @@ Interplanetary fuel calculator for the NEX Energy full-stack code challenge. Use
 nasa-fuel-calculator/
 ├── apps/
 │   ├── client/          # Vite + React SPA
-│   └── server/          # Node.js WebSocket server
+│   └── server/          # Node.js WebSocket server + validation/errors
 ├── packages/
 │   ├── fuel-core/       # Pure fuel calculation logic (Vitest)
-│   └── shared/          # WS message types + planet constants
-├── package.json         # npm workspaces root
+│   └── shared/          # Types + domain constants (actions, planets, gravity)
+├── package.json
 └── AGENTS.md
 ```
 
 ## Package Boundaries
 
-| Package              | Responsibility                                                                     |
-| -------------------- | ---------------------------------------------------------------------------------- |
-| `packages/fuel-core` | All fuel calculation logic. Pure functions only.                                   |
-| `packages/shared`    | Shared TypeScript types, planet constants, WS message shapes.                      |
-| `apps/server`        | WebSocket transport. Validates input, calls `fuel-core`, returns results.          |
-| `apps/client`        | React UI. Flight path builder, mass input, displays results. No calculation logic. |
+| Package | Responsibility |
+| ------- | -------------- |
+| `packages/fuel-core` | All fuel calculation logic. Pure functions only. |
+| `packages/shared` | Shared types and domain constants (`ACTIONS`, `PLANETS`, `GRAVITY`). |
+| `apps/server` | WebSocket transport, Zod validation, error messages, calls `fuel-core`. |
+| `apps/client` | React UI. Flight path builder, mass input, displays results. No calculation logic. |
 
 ## Dev Commands
 
 ```bash
-npm install                  # Install all workspace dependencies
-npm run dev                  # Start all packages with a dev script
-npm run build                # Build all packages
-npm run test                 # Run all workspace tests
+npm install
+npm run dev
+npm run build
+npm run test
+npm run lint
+npm run format
 
-# Per-package (once scaffolded):
+# Per-package:
 npm run dev -w @nasa-fuel/client
 npm run dev -w @nasa-fuel/server
 npm run test -w @nasa-fuel/fuel-core
 ```
+
+## Naming Conventions
+
+| Kind | Style | Example |
+| ---- | ----- | ------- |
+| Constant maps / lookup objects | `SCREAMING_SNAKE` keys | `errors.INVALID_JSON`, `FUEL_FORMULA` |
+| Variables, functions, types | `camelCase` | `flightPath`, `calculateFuel` |
+| Domain string literals | lowercase | `'earth'`, `'launch'` |
+| JSON / TypeScript fields | `camelCase` | `flightPath`, `totalFuel` |
+
+Server error messages live in `apps/server/src/constants/errors.ts` — not in `shared` or `fuel-core`.
 
 ## Domain Rules
 
@@ -62,6 +77,8 @@ npm run test -w @nasa-fuel/fuel-core
 
 - **Launch:** `mass × gravity × 0.042 − 33`
 - **Land:** `mass × gravity × 0.033 − 42`
+
+Implemented via `FUEL_FORMULA` map in `packages/fuel-core`.
 
 ### Fuel-for-Fuel (Recursive)
 
@@ -77,6 +94,8 @@ Example: Landing 28,801 kg on Earth (g = 9.807) → 13,447 total fuel.
 | Moon   | 1.62    |
 | Mars   | 3.711   |
 
+Defined in `packages/shared` as `GRAVITY`.
+
 ### Flight Path Processing
 
 Process the flight path **in reverse order**. Later legs do not carry fuel from earlier legs, but earlier legs must carry fuel for all subsequent legs. Each step's fuel is added to the running mass for preceding steps.
@@ -85,11 +104,13 @@ Process the flight path **in reverse order**. Later legs do not carry fuel from 
 
 Results must match exactly:
 
-| Mission        | Flight Path                                                                   | Mass (kg) | Total Fuel (kg) |
-| -------------- | ----------------------------------------------------------------------------- | --------- | --------------- |
-| Apollo 11      | Launch Earth → Land Moon → Launch Moon → Land Earth                           | 28,801    | 51,898          |
-| Mars Mission   | Launch Earth → Land Mars → Launch Mars → Land Earth                           | 14,606    | 33,388          |
-| Passenger Ship | Launch Earth → Land Moon → Launch Moon → Land Mars → Launch Mars → Land Earth | 75,432    | 212,161         |
+| Mission | Mass (kg) | Total Fuel (kg) |
+| ------- | --------- | --------------- |
+| Apollo 11 | 28,801 | 51,898 |
+| Mars Mission | 14,606 | 33,388 |
+| Passenger Ship | 75,432 | 212,161 |
+
+Apollo 11 path: Launch Earth → Land Moon → Launch Moon → Land Earth.
 
 ## WebSocket Contract
 
@@ -98,35 +119,43 @@ Client sends on every input change (no submit button):
 ```json
 {
   "mass": 28801,
-  "flight_path": [
+  "flightPath": [
     { "action": "launch", "planet": "earth" },
     { "action": "land", "planet": "moon" }
   ]
 }
 ```
 
-Server responds:
+Server responds on success:
 
 ```json
 {
-  "total_fuel": 51898,
-  "breakdown": [{ "action": "launch", "planet": "earth", "fuel": 0 }]
+  "totalFuel": 51898,
+  "breakdown": [
+    { "action": "launch", "planet": "earth", "fuel": 32988 }
+  ]
 }
+```
+
+Server responds on failure:
+
+```json
+{ "error": "Mass must be a positive number" }
 ```
 
 ## Architecture Constraints
 
 - Business logic lives exclusively in `packages/fuel-core`.
-- Server is a thin WebSocket transport layer.
+- Server is a thin WebSocket transport layer (validate → calculate → respond).
 - Client never implements fuel formulas — server is the source of truth.
-- Real-time updates are required: persistent WebSocket connection, recalculate on every input change.
+- Real-time updates: persistent WebSocket, recalculate on every input change.
 - No manual submit button.
 
 ## Testing Policy
 
-- Use Vitest in `packages/fuel-core`.
-- Minimum coverage: recursive fuel logic and all three acceptance scenarios.
-- Co-locate tests with source (`*.test.ts` or `*.spec.ts`).
+- Vitest in `packages/fuel-core` only.
+- Minimum: recursive fuel logic + all three acceptance scenarios.
+- Co-locate tests with source (`*.test.ts`).
 
 ## Code Style
 
@@ -134,5 +163,4 @@ Server responds:
 - Functional React components with hooks.
 - Shared types from `@nasa-fuel/shared`.
 - Comments only for non-obvious business logic.
-- Validate inputs client-side (positive mass, required selections) but defer fuel numbers to the server.
-- Use camelCase for constants names.
+- Validate inputs client-side; defer fuel numbers to the server.
