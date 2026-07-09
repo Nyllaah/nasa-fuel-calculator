@@ -48,7 +48,9 @@ nasa-fuel-calculator/
 
 ```bash
 npm install
-npm run dev
+npm run dev              # server (3001) + client (5173)
+npm run dev:server       # server only
+npm run dev:client       # client only
 npm run build
 npm run test
 npm run lint
