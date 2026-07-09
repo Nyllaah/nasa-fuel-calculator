@@ -1,6 +1,7 @@
 import { z } from 'zod'
 import { ACTIONS, PLANETS } from '@nasa-fuel/shared'
 import type { FuelRequest } from '@nasa-fuel/shared'
+import { errors } from './constants/errors.js'
 
 const flightStepSchema = z.object({
   action: z.enum(ACTIONS),
@@ -8,23 +9,23 @@ const flightStepSchema = z.object({
 })
 
 export const fuelRequestSchema = z.object({
-  mass: z.number().positive('Mass must be a positive number'),
-  flightPath: z.array(flightStepSchema).min(1, 'Flight path must be a non-empty array'),
+  mass: z.number().positive(errors.INVALID_MASS),
+  flightPath: z.array(flightStepSchema).min(1, errors.EMPTY_FLIGHT_PATH),
 })
 
 function formatZodError(error: z.ZodError): string {
   const issue = error.issues[0]
 
   if (!issue) {
-    return 'Invalid request payload'
+    return errors.INVALID_PAYLOAD
   }
 
   if (issue.code === 'invalid_enum_value' && issue.path.at(-1) === 'action') {
-    return `Invalid action: ${String(issue.received)}`
+    return errors.INVALID_ACTION(String(issue.received))
   }
 
   if (issue.code === 'invalid_enum_value' && issue.path.at(-1) === 'planet') {
-    return `Invalid planet: ${String(issue.received)}`
+    return errors.INVALID_PLANET(String(issue.received))
   }
 
   return issue.message

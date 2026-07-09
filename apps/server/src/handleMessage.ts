@@ -1,5 +1,6 @@
 import { calculateFuel } from '@nasa-fuel/fuel-core'
 import type { FuelMessage } from '@nasa-fuel/shared'
+import { errors } from './constants/errors.js'
 import { validateRequest } from './validate.js'
 
 export function handleMessage(raw: string): FuelMessage {
@@ -8,7 +9,7 @@ export function handleMessage(raw: string): FuelMessage {
   try {
     parsed = JSON.parse(raw)
   } catch {
-    return { error: 'Invalid JSON' }
+    return { error: errors.INVALID_JSON }
   }
 
   const validated = validateRequest(parsed)
