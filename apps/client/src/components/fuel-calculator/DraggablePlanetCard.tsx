@@ -46,6 +46,7 @@ function DraggablePlanetCard({
       }}
     >
       <div
+        tabIndex={canUse ? 0 : -1}
         className={cn(
           'fc-planet-card',
           isDimmed ? 'fc-planet-card-dimmed' : 'fc-planet-card-active',

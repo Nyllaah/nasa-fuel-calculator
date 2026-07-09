@@ -122,15 +122,15 @@
   }
 
   .fc-header {
-    @apply relative z-10 flex items-center justify-between border-b border-white/7 bg-black/45 px-8 py-3.5 backdrop-blur-md;
+    @apply relative z-10 flex items-center justify-between gap-3 border-b border-white/7 bg-black/45 px-4 py-3 backdrop-blur-md md:px-6 md:py-3.5 lg:px-8;
   }
 
   .fc-title {
-    @apply font-orbitron text-lg font-bold tracking-[0.2em] text-white;
+    @apply font-orbitron text-sm font-bold tracking-[0.12em] text-white md:text-base md:tracking-[0.16em] lg:text-lg lg:tracking-[0.2em];
   }
 
   .fc-main {
-    @apply relative z-10 mx-auto grid w-full min-w-0 max-w-[1280px] flex-1 grid-cols-[1fr_380px] grid-rows-[auto_1fr_auto] items-start gap-5 px-8 py-6;
+    @apply relative z-10 mx-auto grid w-full min-w-0 max-w-[800px] flex-1 grid-cols-1 items-start gap-4 px-4 py-4 md:max-w-[960px] md:gap-5 md:px-6 md:py-6 lg:max-w-[1280px] lg:grid-cols-[1fr_380px] lg:px-8;
   }
 
   .fc-sidebar {
@@ -146,7 +146,7 @@
   }
 
   .fc-panel-sm {
-    @apply rounded-2xl border border-white/10 bg-[rgb(8_4_30/0.7)] px-5 py-4.5 backdrop-blur-md mt-7;
+    @apply mt-0 rounded-2xl border border-white/10 bg-[rgb(8_4_30/0.7)] px-5 py-4.5 backdrop-blur-md lg:mt-7;
   }
 
   .fc-field-label {
@@ -154,7 +154,7 @@
   }
 
   .fc-mass-input {
-    @apply w-full flex-1 border-0 border-b-2 border-[#00d4ff]/35 bg-transparent py-1 text-right font-orbitron text-[28px] text-white outline-none focus:border-[#00d4ff];
+    @apply w-full flex-1 border-0 border-b-2 border-[#00d4ff]/35 bg-transparent py-1 text-right font-orbitron text-[28px] text-white outline-none focus:border-[#00d4ff] focus-visible:ring-2 focus-visible:ring-[#00d4ff]/55 focus-visible:ring-offset-2 focus-visible:ring-offset-[#04020e];
   }
 
   .fc-mass-input-invalid {
@@ -186,7 +186,7 @@
   }
 
   .fc-palette {
-    @apply flex items-center gap-2;
+    @apply flex flex-wrap items-center gap-2;
   }
 
   .fc-palette-label {
@@ -202,7 +202,7 @@
   }
 
   .fc-planet-card {
-    @apply relative flex min-w-[90px] cursor-grab flex-col items-center gap-2 rounded-2xl border px-4 py-3 backdrop-blur-sm transition-[border-color,background] duration-300 select-none;
+    @apply relative flex min-w-[90px] cursor-grab flex-col items-center gap-2 rounded-2xl border px-4 py-3 backdrop-blur-sm transition-[border-color,background] duration-300 outline-none select-none focus-visible:ring-2 focus-visible:ring-[#00d4ff]/55 focus-visible:ring-offset-2 focus-visible:ring-offset-[#04020e];
   }
 
   .fc-planet-card-active {
@@ -247,21 +247,13 @@
   .fc-waypoint-scroll::-webkit-scrollbar-thumb {
     border-radius: 9999px;
     border: 1px solid rgb(0 212 255 / 0.2);
-    background: linear-gradient(
-      90deg,
-      rgb(0 212 255 / 0.35),
-      rgb(168 85 247 / 0.4)
-    );
+    background: linear-gradient(90deg, rgb(0 212 255 / 0.35), rgb(168 85 247 / 0.4));
     box-shadow: 0 0 8px rgb(0 212 255 / 0.15);
   }
 
   .fc-waypoint-scroll::-webkit-scrollbar-thumb:hover {
     border-color: rgb(0 212 255 / 0.45);
-    background: linear-gradient(
-      90deg,
-      rgb(0 212 255 / 0.55),
-      rgb(168 85 247 / 0.55)
-    );
+    background: linear-gradient(90deg, rgb(0 212 255 / 0.55), rgb(168 85 247 / 0.55));
     box-shadow: 0 0 12px rgb(0 212 255 / 0.25);
   }
 
@@ -278,11 +270,11 @@
   }
 
   .fc-add-stop {
-    @apply flex min-h-[200px] w-[85px] cursor-pointer flex-col items-center justify-center gap-1.5 rounded-2xl border-2 border-dashed border-white/10 bg-black/15 font-orbitron text-[9px] tracking-[0.15em] text-white/30 uppercase transition-[border-color,color,background] duration-200 hover:border-purple-500/50 hover:bg-purple-500/6 hover:text-purple-500;
+    @apply flex h-[200px] min-h-[200px] w-[85px] cursor-pointer flex-col items-center justify-center gap-1.5 rounded-2xl border-2 border-dashed border-white/10 bg-black/15 font-orbitron text-[9px] tracking-[0.15em] text-white/30 uppercase outline-none transition-[border-color,color,background] duration-200 hover:border-purple-500/50 hover:bg-purple-500/6 hover:text-purple-500 focus-visible:ring-2 focus-visible:ring-[#00d4ff]/55 focus-visible:ring-offset-2 focus-visible:ring-offset-[#04020e];
   }
 
   .fc-dropzone {
-    @apply relative flex h-full min-h-[500px] w-full shrink-0 flex-col items-center justify-center gap-3 rounded-[20px] border-2 border-dashed border-white/12 bg-black/20 transition-[border-color,background,box-shadow] duration-250;
+    @apply relative flex h-[300px] w-full shrink-0 flex-col items-center justify-center gap-3 rounded-[20px] border-2 border-dashed border-white/12 bg-black/20 transition-[border-color,background,box-shadow] duration-250;
   }
 
   .fc-dropzone-filled {
@@ -325,11 +317,11 @@
   }
 
   .fc-icon-btn {
-    @apply absolute top-2.5 right-2.5 flex size-[22px] cursor-pointer items-center justify-center rounded-full border border-white/20 bg-black/50 text-white/50;
+    @apply absolute top-2.5 right-2.5 flex size-[22px] cursor-pointer items-center justify-center rounded-full border border-white/20 bg-black/50 text-white/50 outline-none focus-visible:ring-2 focus-visible:ring-[#00d4ff]/55 focus-visible:ring-offset-2 focus-visible:ring-offset-[#04020e];
   }
 
   .fc-remove-btn {
-    @apply absolute top-2.5 left-2.5 flex cursor-pointer items-center gap-0.5 rounded-md border border-white/12 bg-black/40 px-1.5 py-0.5 font-rajdhani text-[9px] tracking-widest text-white/30 uppercase;
+    @apply absolute top-2.5 left-2.5 flex cursor-pointer items-center gap-0.5 rounded-md border border-white/12 bg-black/40 px-1.5 py-0.5 font-rajdhani text-[9px] tracking-widest text-white/30 uppercase outline-none focus-visible:ring-2 focus-visible:ring-[#00d4ff]/55 focus-visible:ring-offset-2 focus-visible:ring-offset-[#04020e];
   }
 
   .fc-corner {
