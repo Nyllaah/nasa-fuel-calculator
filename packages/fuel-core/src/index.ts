@@ -1,1 +1,1 @@
-export { calculateFuel, recursiveFuel, stepFuel } from './calculate.js';
+export { calculateFuel, recursiveFuel, stepFuel } from './calculate.js'

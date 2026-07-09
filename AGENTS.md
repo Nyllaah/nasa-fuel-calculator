@@ -18,12 +18,12 @@ nasa-fuel-calculator/
 
 ## Package Boundaries
 
-| Package | Responsibility |
-|---------|----------------|
-| `packages/fuel-core` | All fuel calculation logic. Pure functions only. |
-| `packages/shared` | Shared TypeScript types, planet constants, WS message shapes. |
-| `apps/server` | WebSocket transport. Validates input, calls `fuel-core`, returns results. |
-| `apps/client` | React UI. Flight path builder, mass input, displays results. No calculation logic. |
+| Package              | Responsibility                                                                     |
+| -------------------- | ---------------------------------------------------------------------------------- |
+| `packages/fuel-core` | All fuel calculation logic. Pure functions only.                                   |
+| `packages/shared`    | Shared TypeScript types, planet constants, WS message shapes.                      |
+| `apps/server`        | WebSocket transport. Validates input, calls `fuel-core`, returns results.          |
+| `apps/client`        | React UI. Flight path builder, mass input, displays results. No calculation logic. |
 
 ## Dev Commands
 
@@ -55,7 +55,7 @@ Example: Landing 28,801 kg on Earth (g = 9.807) → 13,447 total fuel.
 ### Planet Gravity (m/s²)
 
 | Planet | Gravity |
-|--------|---------|
+| ------ | ------- |
 | Earth  | 9.807   |
 | Moon   | 1.62    |
 | Mars   | 3.711   |
@@ -68,11 +68,11 @@ Process the flight path **in reverse order**. Later legs do not carry fuel from 
 
 Results must match exactly:
 
-| Mission        | Flight Path                                              | Mass (kg) | Total Fuel (kg) |
-|----------------|----------------------------------------------------------|-----------|-----------------|
-| Apollo 11      | Launch Earth → Land Moon → Launch Moon → Land Earth      | 28,801    | 51,898          |
-| Mars Mission   | Launch Earth → Land Mars → Launch Mars → Land Earth      | 14,606    | 33,388          |
-| Passenger Ship | Launch Earth → Land Moon → Launch Moon → Land Mars → Launch Mars → Land Earth | 75,432 | 212,161 |
+| Mission        | Flight Path                                                                   | Mass (kg) | Total Fuel (kg) |
+| -------------- | ----------------------------------------------------------------------------- | --------- | --------------- |
+| Apollo 11      | Launch Earth → Land Moon → Launch Moon → Land Earth                           | 28,801    | 51,898          |
+| Mars Mission   | Launch Earth → Land Mars → Launch Mars → Land Earth                           | 14,606    | 33,388          |
+| Passenger Ship | Launch Earth → Land Moon → Launch Moon → Land Mars → Launch Mars → Land Earth | 75,432    | 212,161         |
 
 ## WebSocket Contract
 
@@ -93,9 +93,7 @@ Server responds:
 ```json
 {
   "total_fuel": 51898,
-  "breakdown": [
-    { "action": "launch", "planet": "earth", "fuel": 0 }
-  ]
+  "breakdown": [{ "action": "launch", "planet": "earth", "fuel": 0 }]
 }
 ```
 
@@ -120,3 +118,4 @@ Server responds:
 - Shared types from `@nasa-fuel/shared`.
 - Comments only for non-obvious business logic.
 - Validate inputs client-side (positive mass, required selections) but defer fuel numbers to the server.
+- Use camelCase for constants names.
