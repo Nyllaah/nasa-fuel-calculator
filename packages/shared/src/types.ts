@@ -29,4 +29,13 @@ type FuelError = {
   error: string
 }
 
-export type { Action, Planet, FuelMessage, FuelRequest, FuelBreakdownStep, FuelResponse, FuelError }
+export type {
+  Action,
+  Planet,
+  FlightStep,
+  FuelMessage,
+  FuelRequest,
+  FuelBreakdownStep,
+  FuelResponse,
+  FuelError,
+}
