@@ -1,4 +1,4 @@
 export const errors = {
-  INVALID_RESPONSE: 'Invalid response from server',
-  WEBSOCKET_CONNECTION: 'WebSocket connection error',
+  INVALID_RESPONSE: 'Resposta inválida do servidor',
+  WEBSOCKET_CONNECTION: 'Erro de conexão WebSocket',
 } as const

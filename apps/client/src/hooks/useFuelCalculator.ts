@@ -28,7 +28,11 @@ export function useFuelCalculator() {
 
   const { result, error: messageError, handleMessage } = useFuelMessage()
 
-  const { status, error: connectionError, send } = useWebSocket({
+  const {
+    status,
+    error: connectionError,
+    send,
+  } = useWebSocket({
     url: WS_URL,
     onMessage: handleMessage,
   })
@@ -53,21 +57,18 @@ export function useFuelCalculator() {
     setFlightPath((prev) => prev.filter((_, i) => i !== index))
   }, [])
 
-  const updateStep = useCallback(
-    (index: number, field: 'action' | 'planet', value: string) => {
-      setFlightPath((prev) =>
-        prev.map((step, i) =>
-          i === index
-            ? {
-                ...step,
-                [field]: field === 'action' ? (value as Action) : (value as Planet),
-              }
-            : step,
-        ),
-      )
-    },
-    [],
-  )
+  const updateStep = useCallback((index: number, field: 'action' | 'planet', value: string) => {
+    setFlightPath((prev) =>
+      prev.map((step, i) =>
+        i === index
+          ? {
+              ...step,
+              [field]: field === 'action' ? (value as Action) : (value as Planet),
+            }
+          : step,
+      ),
+    )
+  }, [])
 
   return {
     mass,
@@ -76,6 +77,7 @@ export function useFuelCalculator() {
     status,
     error,
     setMass,
+    setFlightPath,
     addStep,
     removeStep,
     updateStep,
