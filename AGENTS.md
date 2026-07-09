@@ -10,7 +10,7 @@ Interplanetary fuel calculator for the NEX Energy full-stack code challenge. Use
 | ----- | ---------- |
 | Monorepo | npm workspaces |
 | Language | TypeScript (strict) |
-| Frontend | React, Vite |
+| Frontend | React, Vite, shadcn/ui, Tailwind CSS |
 | Backend | Node.js, WebSockets (`ws`) |
 | Validation | Zod (server) |
 | Testing | Vitest (`packages/fuel-core`) |

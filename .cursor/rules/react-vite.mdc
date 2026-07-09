@@ -6,8 +6,9 @@ alwaysApply: false
 
 # React + Vite Frontend
 
-UI requirements and WS contract → [AGENTS.md](../../AGENTS.md).
+UI: **shadcn/ui** (Base UI + Tailwind v4). Add components with `npx shadcn@latest add <name>` from `apps/client`. Details → [AGENTS.md](../../AGENTS.md).
 
+- Use `@/components/ui/*` for primitives (Button, Input, Select, Card, Table, Label)
 - Functional components + hooks (`useFuelCalculator` for WS lifecycle)
 - No fuel formulas in client — server is source of truth
 - No submit button; send on every input change
