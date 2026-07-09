@@ -122,7 +122,7 @@
   }
 
   .fc-header {
-    @apply relative z-10 flex items-center justify-between gap-3 border-b border-white/7 bg-black/45 px-4 py-3 backdrop-blur-md md:px-6 md:py-3.5 lg:px-8;
+    @apply relative z-20 flex items-center justify-between gap-3 overflow-visible border-b border-white/7 bg-black/45 px-4 py-3 backdrop-blur-md md:px-6 md:py-3.5 lg:px-8;
   }
 
   .fc-title {
@@ -186,15 +186,39 @@
   }
 
   .fc-lang-select {
-    @apply flex items-center gap-2 rounded-full border border-white/6 bg-black/40 py-1.5 pr-2 pl-3.5;
+    @apply relative z-30;
+  }
+
+  .fc-lang-trigger {
+    @apply flex items-center gap-2 rounded-full border border-white/6 bg-black/40 py-1.5 pr-2.5 pl-3.5 outline-none transition-[border-color,box-shadow] duration-200 hover:border-white/12 focus-visible:ring-2 focus-visible:ring-[#00d4ff]/55 focus-visible:ring-offset-2 focus-visible:ring-offset-[#04020e];
   }
 
   .fc-lang-label {
     @apply font-orbitron text-[9px] tracking-[0.15em] text-white/35 uppercase;
   }
 
-  .fc-lang-dropdown {
-    @apply cursor-pointer border-0 bg-transparent font-rajdhani text-xs tracking-wide text-white/80 outline-none focus-visible:ring-2 focus-visible:ring-[#00d4ff]/55 focus-visible:ring-offset-2 focus-visible:ring-offset-[#04020e];
+  .fc-lang-value {
+    @apply font-rajdhani text-xs tracking-wide text-white/85;
+  }
+
+  .fc-lang-chevron {
+    @apply text-white/40 transition-transform duration-200;
+  }
+
+  .fc-lang-chevron-open {
+    @apply rotate-180 text-[#00d4ff]/70;
+  }
+
+  .fc-lang-menu {
+    @apply absolute top-[calc(100%+0.5rem)] right-0 z-50 min-w-40 overflow-hidden rounded-xl border border-white/10 bg-[rgb(8_4_30/0.96)] py-1 shadow-[0_12px_40px_rgba(0,0,0,0.55)] backdrop-blur-md;
+  }
+
+  .fc-lang-option {
+    @apply flex w-full items-center px-3.5 py-2 text-left font-rajdhani text-sm tracking-wide text-white/75 outline-none transition-colors hover:bg-white/6 hover:text-white focus-visible:bg-white/6 focus-visible:text-white;
+  }
+
+  .fc-lang-option-active {
+    @apply bg-[#00d4ff]/10 text-[#00d4ff];
   }
 
   .fc-palette {
