@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
+import { errors } from '@/constants/errors'
 
 const INITIAL_RECONNECT_DELAY_MS = 1000
 const MAX_RECONNECT_DELAY_MS = 30_000
@@ -67,7 +68,7 @@ export function useWebSocket({ url, onMessage }: UseWebSocketOptions) {
         if (cancelled) return
 
         setStatus('error')
-        setError('WebSocket connection error')
+        setError(errors.WEBSOCKET_CONNECTION)
       }
 
       ws.onclose = () => {

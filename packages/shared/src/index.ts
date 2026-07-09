@@ -1,4 +1,12 @@
 export { ACTIONS, PLANETS, GRAVITY } from './constants.js'
+export {
+  flightStepSchema,
+  fuelBreakdownStepSchema,
+  fuelRequestSchema,
+  fuelResponseSchema,
+  fuelErrorSchema,
+  fuelMessageSchema,
+} from './schemas.js'
 export type {
   Action,
   Planet,

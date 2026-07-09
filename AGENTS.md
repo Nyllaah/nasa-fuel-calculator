@@ -12,7 +12,7 @@ Interplanetary fuel calculator for the NEX Energy full-stack code challenge. Use
 | Language | TypeScript (strict) |
 | Frontend | React, Vite, shadcn/ui, Tailwind CSS |
 | Backend | Node.js, WebSockets (`ws`) |
-| Validation | Zod (server) |
+| Validation | Zod (`packages/shared` schemas; apps map errors to messages) |
 | Testing | Vitest (`packages/fuel-core`) |
 | Formatting | Prettier (no semicolons) |
 | Linting | ESLint (monorepo root) |
@@ -40,7 +40,7 @@ nasa-fuel-calculator/
 | Package | Responsibility |
 | ------- | -------------- |
 | `packages/fuel-core` | All fuel calculation logic. Pure functions only. |
-| `packages/shared` | Shared types and domain constants (`ACTIONS`, `PLANETS`, `GRAVITY`). |
+| `packages/shared` | Shared types, domain constants (`ACTIONS`, `PLANETS`, `GRAVITY`), and Zod WS schemas. |
 | `apps/server` | WebSocket transport, Zod validation, error messages, calls `fuel-core`. |
 | `apps/client` | React UI. Flight path builder, mass input, displays results. No calculation logic. |
 
@@ -72,6 +72,22 @@ npm run test -w @nasa-fuel/fuel-core
 | JSON / TypeScript fields | `camelCase` | `flightPath`, `totalFuel` |
 
 Server error messages live in `apps/server/src/constants/errors.ts` — not in `shared` or `fuel-core`.
+
+Client error messages live in `apps/client/src/constants/errors.ts` — not in `shared`.
+
+## Exports
+
+Export symbols from their **source module** only. Do not re-export through consumers.
+
+| Symbol | Import from |
+| ------ | ----------- |
+| `fuelRequestSchema`, `fuelMessageSchema`, shared types | `@nasa-fuel/shared` |
+| `validateRequest` | `apps/server/src/validate.ts` |
+| `ConnectionStatus` | `apps/client/src/hooks/useWebSocket.ts` |
+| Server `errors` | `apps/server/src/constants/errors.ts` |
+| Client `errors` | `apps/client/src/constants/errors.ts` |
+
+A file exports only what it **defines** or **implements**. If a symbol moves (e.g. schema into `shared`), update call sites — do not leave a re-export behind in the old file.
 
 ## Domain Rules
 
