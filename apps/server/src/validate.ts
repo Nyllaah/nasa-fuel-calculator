@@ -1,5 +1,5 @@
 import { z } from 'zod'
-import { fuelRequestSchema } from '@nasa-fuel/shared'
+import { fuelRequestSchema, hasSamePlanetLegInFlightPath } from '@nasa-fuel/shared'
 import type { FuelRequest } from '@nasa-fuel/shared'
 import { errors } from './constants/errors.js'
 
@@ -34,6 +34,10 @@ export function validateRequest(data: unknown): FuelRequest | string {
 
   if (!result.success) {
     return formatZodError(result.error)
+  }
+
+  if (hasSamePlanetLegInFlightPath(result.data.flightPath)) {
+    return errors.SAME_PLANET_LEG
   }
 
   return result.data

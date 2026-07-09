@@ -10,6 +10,7 @@ const ui = {
   LAND_ON: 'POUSAR EM',
   RELEASE_TO_SELECT: 'Solte para selecionar',
   DROP_PLANET_HERE: 'Arraste um planeta aqui',
+  INVALID_DROP_SAME_PLANET: 'Escolha um planeta diferente',
   CLEAR_PLANET: 'Limpar planeta',
   REMOVE_STOP: 'Remover parada',
   REMOVE_STOP_SHORT: 'Parada',

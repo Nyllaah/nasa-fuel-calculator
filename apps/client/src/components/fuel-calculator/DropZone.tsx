@@ -18,6 +18,7 @@ type DropZoneProps = {
   totalStops: number
   planet: Planet | null
   isHovered: boolean
+  isInvalidHover?: boolean
   zoneRef: (element: HTMLDivElement | null) => void
   onClear: () => void
   onRemove?: () => void
@@ -28,6 +29,7 @@ function DropZone({
   totalStops,
   planet,
   isHovered,
+  isInvalidHover = false,
   zoneRef,
   onClear,
   onRemove,
@@ -57,6 +59,7 @@ function DropZone({
         'fc-dropzone',
         planet && 'fc-dropzone-filled',
         isHovered && 'fc-dropzone-hovered',
+        isInvalidHover && 'fc-dropzone-invalid',
       )}
     >
       <p className="fc-dropzone-label">{label}</p>
@@ -84,7 +87,11 @@ function DropZone({
           >
             <div className="fc-planet-slot">{emptyIcon}</div>
             <span className="fc-drop-hint">
-              {isHovered ? ui.RELEASE_TO_SELECT : ui.DROP_PLANET_HERE}
+              {isInvalidHover
+                ? ui.INVALID_DROP_SAME_PLANET
+                : isHovered
+                  ? ui.RELEASE_TO_SELECT
+                  : ui.DROP_PLANET_HERE}
             </span>
           </motion.div>
         )}

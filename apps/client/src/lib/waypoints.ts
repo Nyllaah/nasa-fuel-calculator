@@ -1,4 +1,5 @@
 import type { FlightStep, Planet } from '@nasa-fuel/shared'
+import { hasSamePlanetLeg } from '@nasa-fuel/shared'
 
 function waypointsToFlightPath(waypoints: Planet[]): FlightStep[] {
   const flightPath: FlightStep[] = []
@@ -15,4 +16,12 @@ function isWaypointsComplete(waypoints: (Planet | null)[]): waypoints is Planet[
   return waypoints.length >= 2 && waypoints.every((waypoint) => waypoint !== null)
 }
 
-export { waypointsToFlightPath, isWaypointsComplete }
+function isValidWaypointRoute(waypoints: Planet[]): boolean {
+  return !hasSamePlanetLeg(waypoints)
+}
+
+function isWaypointRouteReady(waypoints: (Planet | null)[]): waypoints is Planet[] {
+  return isWaypointsComplete(waypoints) && isValidWaypointRoute(waypoints)
+}
+
+export { waypointsToFlightPath, isWaypointsComplete, isValidWaypointRoute, isWaypointRouteReady }

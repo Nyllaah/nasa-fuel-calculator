@@ -1,5 +1,12 @@
 export { ACTIONS, PLANETS, GRAVITY } from './constants.js'
 export {
+  canPlaceWaypointAt,
+  canPlacePlanetAnywhere,
+  hasSamePlanetLeg,
+  hasSamePlanetLegInFlightPath,
+  wouldRemoveWaypointCreateSamePlanetLeg,
+} from './flightPathValidation.js'
+export {
   flightStepSchema,
   fuelBreakdownStepSchema,
   fuelRequestSchema,

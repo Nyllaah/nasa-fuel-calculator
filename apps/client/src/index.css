@@ -122,7 +122,7 @@
   }
 
   .fc-main {
-    @apply relative z-10 mx-auto grid w-full max-w-[1280px] flex-1 grid-cols-[1fr_380px] grid-rows-[auto_1fr_auto] gap-5 px-8 py-6;
+    @apply relative z-10 mx-auto grid w-full min-w-0 max-w-[1280px] flex-1 grid-cols-[1fr_380px] grid-rows-[auto_1fr_auto] items-start gap-5 px-8 py-6;
   }
 
   .fc-sidebar {
@@ -138,7 +138,7 @@
   }
 
   .fc-panel-sm {
-    @apply rounded-2xl border border-white/10 bg-[rgb(8_4_30/0.7)] px-5 py-4.5 backdrop-blur-md;
+    @apply rounded-2xl border border-white/10 bg-[rgb(8_4_30/0.7)] px-5 py-4.5 backdrop-blur-md mt-7;
   }
 
   .fc-field-label {
@@ -206,7 +206,51 @@
   }
 
   .fc-waypoint-section {
-    @apply flex flex-col gap-3;
+    @apply flex min-w-0 max-w-full flex-col gap-3;
+  }
+
+  .fc-waypoint-scroll {
+    @apply flex w-full min-w-0 items-stretch overflow-x-auto overflow-y-hidden pb-2;
+    scroll-behavior: smooth;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: thin;
+    scrollbar-color: rgb(0 212 255 / 0.35) rgb(255 255 255 / 0.06);
+  }
+
+  .fc-waypoint-scroll::-webkit-scrollbar {
+    height: 6px;
+  }
+
+  .fc-waypoint-scroll::-webkit-scrollbar-track {
+    margin-inline: 0.25rem;
+    border-radius: 9999px;
+    background: rgb(255 255 255 / 0.05);
+    box-shadow: inset 0 0 0 1px rgb(255 255 255 / 0.06);
+  }
+
+  .fc-waypoint-scroll::-webkit-scrollbar-thumb {
+    border-radius: 9999px;
+    border: 1px solid rgb(0 212 255 / 0.2);
+    background: linear-gradient(
+      90deg,
+      rgb(0 212 255 / 0.35),
+      rgb(168 85 247 / 0.4)
+    );
+    box-shadow: 0 0 8px rgb(0 212 255 / 0.15);
+  }
+
+  .fc-waypoint-scroll::-webkit-scrollbar-thumb:hover {
+    border-color: rgb(0 212 255 / 0.45);
+    background: linear-gradient(
+      90deg,
+      rgb(0 212 255 / 0.55),
+      rgb(168 85 247 / 0.55)
+    );
+    box-shadow: 0 0 12px rgb(0 212 255 / 0.25);
+  }
+
+  .fc-waypoint-stop {
+    @apply w-40 shrink-0;
   }
 
   .fc-connector {
@@ -222,7 +266,7 @@
   }
 
   .fc-dropzone {
-    @apply relative flex min-h-[500px] min-w-40 flex-1 flex-col items-center justify-center gap-3 rounded-[20px] border-2 border-dashed border-white/12 bg-black/20 transition-[border-color,background,box-shadow] duration-250;
+    @apply relative flex h-full min-h-[500px] w-full shrink-0 flex-col items-center justify-center gap-3 rounded-[20px] border-2 border-dashed border-white/12 bg-black/20 transition-[border-color,background,box-shadow] duration-250;
   }
 
   .fc-dropzone-filled {
@@ -237,6 +281,14 @@
     box-shadow:
       0 0 30px rgb(var(--fc-accent-rgb) / 0.2),
       inset 0 0 30px rgb(var(--fc-accent-rgb) / 0.04);
+  }
+
+  .fc-dropzone-invalid {
+    border-color: rgb(239 68 68 / 0.7);
+    background: rgb(239 68 68 / 0.06);
+    box-shadow:
+      0 0 24px rgb(239 68 68 / 0.15),
+      inset 0 0 24px rgb(239 68 68 / 0.04);
   }
 
   .fc-dropzone-label {

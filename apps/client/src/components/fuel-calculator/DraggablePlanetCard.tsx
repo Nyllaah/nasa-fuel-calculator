@@ -7,6 +7,7 @@ import { cn } from '@/lib/utils'
 type DraggablePlanetCardProps = {
   planet: Planet
   useCount: number
+  canUse: boolean
   onDragStart: (planet: Planet) => void
   onDrag: (planet: Planet, point: { x: number; y: number }) => void
   onDragEnd: (planet: Planet, point: { x: number; y: number }) => void
@@ -15,6 +16,7 @@ type DraggablePlanetCardProps = {
 function DraggablePlanetCard({
   planet,
   useCount,
+  canUse,
   onDragStart,
   onDrag,
   onDragEnd,
@@ -22,13 +24,16 @@ function DraggablePlanetCard({
   const config = PLANET_CONFIG[planet]
   const x = useMotionValue(0)
   const y = useMotionValue(0)
-  const isDimmed = useCount > 0
+  const isDimmed = !canUse
 
   return (
     <motion.div
-      drag
+      drag={canUse}
       style={{ x, y }}
-      className="cursor-grab select-none active:cursor-grabbing"
+      className={cn(
+        'select-none',
+        canUse ? 'cursor-grab active:cursor-grabbing' : 'cursor-not-allowed',
+      )}
       dragElastic={0.15}
       dragMomentum={false}
       whileDrag={{ scale: 1.12, zIndex: 50 }}

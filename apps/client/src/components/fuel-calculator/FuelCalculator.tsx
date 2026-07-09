@@ -1,7 +1,9 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { Satellite } from 'lucide-react'
 import type { FuelResponse, Planet } from '@nasa-fuel/shared'
+import { canPlaceWaypointAt, canPlacePlanetAnywhere, wouldRemoveWaypointCreateSamePlanetLeg } from '@nasa-fuel/shared'
 import { ui } from '@/constants/ui'
+import { errors } from '@/constants/errors'
 import { ConnectionIndicator } from '@/components/fuel-calculator/ConnectionIndicator'
 import { PlanetPalette, WaypointStrip } from '@/components/fuel-calculator/FlightPathBuilder'
 import { MassInput } from '@/components/fuel-calculator/MassInput'
@@ -10,7 +12,7 @@ import { StarField } from '@/components/fuel-calculator/StarField'
 import { useFuelCalculator } from '@/hooks/useFuelCalculator'
 import { pointToRectDist } from '@/lib/format'
 import { isFuelError, isFuelResponse } from '@/lib/parseFuelMessage'
-import { isWaypointsComplete, waypointsToFlightPath } from '@/lib/waypoints'
+import { isWaypointRouteReady, isWaypointsComplete, waypointsToFlightPath } from '@/lib/waypoints'
 
 function FuelCalculator() {
   const { mass, setMass, setFlightPath, result, status, error } = useFuelCalculator()
@@ -22,7 +24,7 @@ function FuelCalculator() {
   const zoneRefs = useRef<(HTMLDivElement | null)[]>([])
 
   useEffect(() => {
-    if (isWaypointsComplete(waypoints)) {
+    if (isWaypointRouteReady(waypoints)) {
       setFlightPath(waypointsToFlightPath(waypoints))
       return
     }
@@ -63,7 +65,7 @@ function FuelCalculator() {
     (planet: Planet, point: { x: number; y: number }) => {
       const index = checkProximity(point)
 
-      if (index !== null) {
+      if (index !== null && canPlaceWaypointAt(waypoints, index, planet)) {
         setWaypoints((previous) => {
           const next = [...previous]
           next[index] = planet
@@ -74,7 +76,7 @@ function FuelCalculator() {
       setDragging(null)
       setNearZone(null)
     },
-    [checkProximity],
+    [checkProximity, waypoints],
   )
 
   const planetUseCount = useCallback(
@@ -82,11 +84,20 @@ function FuelCalculator() {
     [waypoints],
   )
 
+  const canUsePlanet = useCallback(
+    (planet: Planet) => canPlacePlanetAnywhere(waypoints, planet),
+    [waypoints],
+  )
+
   const allFilled = isWaypointsComplete(waypoints)
+  const routeInvalid = allFilled && !isWaypointRouteReady(waypoints)
 
   const fuelResult: FuelResponse | null = result && isFuelResponse(result) ? result : null
 
-  const displayError = error ?? (result && isFuelError(result) ? result.error : null)
+  const displayError =
+    error ??
+    (routeInvalid ? errors.SAME_PLANET_LEG : null) ??
+    (result && isFuelError(result) ? result.error : null)
 
   return (
     <div className="fc-shell fc-no-spinners">
@@ -105,6 +116,7 @@ function FuelCalculator() {
         <div className="col-span-full">
           <PlanetPalette
             planetUseCount={planetUseCount}
+            canUsePlanet={canUsePlanet}
             onDragStart={handleDragStart}
             onDrag={handleDrag}
             onDragEnd={handleDragEnd}
@@ -117,6 +129,7 @@ function FuelCalculator() {
           nearZone={nearZone}
           zoneRefs={zoneRefs}
           planetUseCount={planetUseCount}
+          canUsePlanet={canUsePlanet}
           onDragStart={handleDragStart}
           onDrag={handleDrag}
           onDragEnd={handleDragEnd}
@@ -127,13 +140,15 @@ function FuelCalculator() {
               return next
             })
           }
-          onRemoveWaypoint={(index) =>
+          onRemoveWaypoint={(index) => {
+            if (wouldRemoveWaypointCreateSamePlanetLeg(waypoints, index)) return
+
             setWaypoints((previous) => {
               const next = previous.filter((_, waypointIndex) => waypointIndex !== index)
               zoneRefs.current = zoneRefs.current.slice(0, next.length)
               return next
             })
-          }
+          }}
           onAddWaypoint={() => setWaypoints((previous) => [...previous, null])}
         />
 

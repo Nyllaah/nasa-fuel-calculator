@@ -1,6 +1,7 @@
-import { Fragment } from 'react'
+import { Fragment, useEffect, useRef } from 'react'
 import { Plus, Rocket } from 'lucide-react'
 import type { Planet } from '@nasa-fuel/shared'
+import { canPlaceWaypointAt } from '@nasa-fuel/shared'
 import { ui } from '@/constants/ui'
 import { DraggablePlanetCard } from '@/components/fuel-calculator/DraggablePlanetCard'
 import { DropZone } from '@/components/fuel-calculator/DropZone'
@@ -9,6 +10,7 @@ import { cn } from '@/lib/utils'
 
 type DragHandlers = {
   planetUseCount: (planet: Planet) => number
+  canUsePlanet: (planet: Planet) => boolean
   onDragStart: (planet: Planet) => void
   onDrag: (planet: Planet, point: { x: number; y: number }) => void
   onDragEnd: (planet: Planet, point: { x: number; y: number }) => void
@@ -16,7 +18,13 @@ type DragHandlers = {
 
 type PlanetPaletteProps = DragHandlers
 
-function PlanetPalette({ planetUseCount, onDragStart, onDrag, onDragEnd }: PlanetPaletteProps) {
+function PlanetPalette({
+  planetUseCount,
+  canUsePlanet,
+  onDragStart,
+  onDrag,
+  onDragEnd,
+}: PlanetPaletteProps) {
   return (
     <div className="fc-palette">
       <span className="fc-palette-label">{ui.CELESTIAL_BODIES}</span>
@@ -27,6 +35,7 @@ function PlanetPalette({ planetUseCount, onDragStart, onDrag, onDragEnd }: Plane
             key={planet}
             planet={planet}
             useCount={planetUseCount(planet)}
+            canUse={canUsePlanet(planet)}
             onDragStart={onDragStart}
             onDrag={onDrag}
             onDragEnd={onDragEnd}
@@ -57,6 +66,15 @@ function WaypointStrip({
   onRemoveWaypoint,
   onAddWaypoint,
 }: WaypointStripProps) {
+  const scrollRef = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    const container = scrollRef.current
+    if (!container) return
+
+    container.scrollTo({ left: container.scrollWidth, behavior: 'smooth' })
+  }, [waypoints.length])
+
   return (
     <div className="fc-waypoint-section">
       <div className="fc-label">
@@ -64,15 +82,24 @@ function WaypointStrip({
         {ui.FLIGHT_PATH_CONFIG}
       </div>
 
-      <div className="flex flex-1 items-stretch overflow-x-auto pb-1">
-        {waypoints.map((planet, index) => (
+      <div ref={scrollRef} className="fc-waypoint-scroll">
+        {waypoints.map((planet, index) => {
+          const canDrop =
+            dragging !== null && nearZone === index && canPlaceWaypointAt(waypoints, index, dragging)
+          const invalidDrop =
+            dragging !== null &&
+            nearZone === index &&
+            !canPlaceWaypointAt(waypoints, index, dragging)
+
+          return (
           <Fragment key={index}>
-            <div className="flex min-w-40 flex-1">
+            <div className="fc-waypoint-stop">
               <DropZone
                 index={index}
                 totalStops={waypoints.length}
                 planet={planet}
-                isHovered={dragging !== null && nearZone === index}
+                isHovered={canDrop}
+                isInvalidHover={invalidDrop}
                 zoneRef={(element) => {
                   zoneRefs.current[index] = element
                 }}
@@ -95,7 +122,8 @@ function WaypointStrip({
               </div>
             )}
           </Fragment>
-        ))}
+          )
+        })}
 
         {waypoints.length < 6 && (
           <div className="flex shrink-0 items-center pl-3">
