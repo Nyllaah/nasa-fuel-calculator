@@ -13,13 +13,6 @@ function stopAccent(index: number, total: number): { color: string; rgb: string 
   return { color: '#a855f7', rgb: '168 85 247' }
 }
 
-const CORNER_CLASS = {
-  tl: 'top-2 left-2 border-t-2 border-l-2',
-  tr: 'top-2 right-2 border-t-2 border-r-2',
-  bl: 'bottom-2 left-2 border-b-2 border-l-2',
-  br: 'bottom-2 right-2 border-b-2 border-r-2',
-} as const
-
 type DropZoneProps = {
   index: number
   totalStops: number
@@ -66,17 +59,6 @@ function DropZone({
         isHovered && 'fc-dropzone-hovered',
       )}
     >
-      {(['tl', 'tr', 'bl', 'br'] as const).map((corner) => (
-        <div
-          key={corner}
-          className={cn(
-            'fc-corner',
-            CORNER_CLASS[corner],
-            planet || isHovered ? 'opacity-80' : 'opacity-30',
-          )}
-        />
-      ))}
-
       <p className="fc-dropzone-label">{label}</p>
 
       <AnimatePresence mode="wait">
@@ -89,7 +71,7 @@ function DropZone({
             transition={{ type: 'spring', stiffness: 300, damping: 22 }}
             className="flex flex-col items-center gap-2.5"
           >
-            <PlanetOrb planet={planet} size={64} glow />
+            <PlanetOrb planet={planet} size={96} glow />
             <span className="fc-planet-name-lg">{PLANET_CONFIG[planet].label}</span>
           </motion.div>
         ) : (

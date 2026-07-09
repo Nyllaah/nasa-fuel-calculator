@@ -16,12 +16,7 @@ type DragHandlers = {
 
 type PlanetPaletteProps = DragHandlers
 
-function PlanetPalette({
-  planetUseCount,
-  onDragStart,
-  onDrag,
-  onDragEnd,
-}: PlanetPaletteProps) {
+function PlanetPalette({ planetUseCount, onDragStart, onDrag, onDragEnd }: PlanetPaletteProps) {
   return (
     <div className="fc-palette">
       <span className="fc-palette-label">{ui.CELESTIAL_BODIES}</span>
@@ -82,9 +77,7 @@ function WaypointStrip({
                   zoneRefs.current[index] = element
                 }}
                 onClear={() => onClearWaypoint(index)}
-                onRemove={
-                  waypoints.length > 2 ? () => onRemoveWaypoint(index) : undefined
-                }
+                onRemove={waypoints.length > 2 ? () => onRemoveWaypoint(index) : undefined}
               />
             </div>
 
@@ -95,9 +88,7 @@ function WaypointStrip({
                     key={marker}
                     className={cn(
                       'fc-connector-marker',
-                      waypoints[index] && waypoints[index + 1]
-                        ? 'opacity-90'
-                        : 'opacity-25',
+                      waypoints[index] && waypoints[index + 1] ? 'opacity-90' : 'opacity-25',
                     )}
                   />
                 ))}
