@@ -1,7 +1,7 @@
 import { motion, useMotionValue, type PanInfo } from 'framer-motion'
 import type { Planet } from '@nasa-fuel/shared'
 import { PlanetOrb } from '@/components/fuel-calculator/PlanetOrb'
-import { PLANET_CONFIG } from '@/lib/planetConfig'
+import { useLocale } from '@/context/LocaleContext'
 import { cn } from '@/lib/utils'
 
 type DraggablePlanetCardProps = {
@@ -21,7 +21,7 @@ function DraggablePlanetCard({
   onDrag,
   onDragEnd,
 }: DraggablePlanetCardProps) {
-  const config = PLANET_CONFIG[planet]
+  const { ui } = useLocale()
   const x = useMotionValue(0)
   const y = useMotionValue(0)
   const isDimmed = !canUse
@@ -53,13 +53,8 @@ function DraggablePlanetCard({
         )}
       >
         <PlanetOrb planet={planet} size={56} glow={!isDimmed} dim={isDimmed} />
-        <span
-          className={cn(
-            'fc-planet-name',
-            isDimmed ? 'text-white/30' : 'text-white/85',
-          )}
-        >
-          {config.label}
+        <span className={cn('fc-planet-name', isDimmed ? 'text-white/30' : 'text-white/85')}>
+          {ui.PLANETS[planet]}
         </span>
         {useCount > 0 && <div className="fc-use-badge">{useCount}</div>}
       </div>

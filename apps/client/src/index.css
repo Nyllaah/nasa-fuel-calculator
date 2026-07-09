@@ -185,6 +185,18 @@
     @apply font-orbitron text-[9px] tracking-widest uppercase;
   }
 
+  .fc-lang-select {
+    @apply flex items-center gap-2 rounded-full border border-white/6 bg-black/40 py-1.5 pr-2 pl-3.5;
+  }
+
+  .fc-lang-label {
+    @apply font-orbitron text-[9px] tracking-[0.15em] text-white/35 uppercase;
+  }
+
+  .fc-lang-dropdown {
+    @apply cursor-pointer border-0 bg-transparent font-rajdhani text-xs tracking-wide text-white/80 outline-none focus-visible:ring-2 focus-visible:ring-[#00d4ff]/55 focus-visible:ring-offset-2 focus-visible:ring-offset-[#04020e];
+  }
+
   .fc-palette {
     @apply flex flex-wrap items-center gap-2;
   }

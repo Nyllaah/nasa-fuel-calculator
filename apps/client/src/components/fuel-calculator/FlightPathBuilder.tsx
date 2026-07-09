@@ -2,9 +2,9 @@ import { Fragment, useEffect, useRef } from 'react'
 import { Plus, Rocket } from 'lucide-react'
 import type { Planet } from '@nasa-fuel/shared'
 import { canPlaceWaypointAt } from '@nasa-fuel/shared'
-import { ui } from '@/constants/ui'
 import { DraggablePlanetCard } from '@/components/fuel-calculator/DraggablePlanetCard'
 import { DropZone } from '@/components/fuel-calculator/DropZone'
+import { useLocale } from '@/context/LocaleContext'
 import { PLANETS } from '@/lib/planetConfig'
 import { cn } from '@/lib/utils'
 
@@ -25,6 +25,8 @@ function PlanetPalette({
   onDrag,
   onDragEnd,
 }: PlanetPaletteProps) {
+  const { ui } = useLocale()
+
   return (
     <div className="fc-palette">
       <span className="fc-palette-label">{ui.CELESTIAL_BODIES}</span>
@@ -66,6 +68,7 @@ function WaypointStrip({
   onRemoveWaypoint,
   onAddWaypoint,
 }: WaypointStripProps) {
+  const { ui } = useLocale()
   const scrollRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
@@ -85,43 +88,45 @@ function WaypointStrip({
       <div ref={scrollRef} className="fc-waypoint-scroll">
         {waypoints.map((planet, index) => {
           const canDrop =
-            dragging !== null && nearZone === index && canPlaceWaypointAt(waypoints, index, dragging)
+            dragging !== null &&
+            nearZone === index &&
+            canPlaceWaypointAt(waypoints, index, dragging)
           const invalidDrop =
             dragging !== null &&
             nearZone === index &&
             !canPlaceWaypointAt(waypoints, index, dragging)
 
           return (
-          <Fragment key={index}>
-            <div className="fc-waypoint-stop">
-              <DropZone
-                index={index}
-                totalStops={waypoints.length}
-                planet={planet}
-                isHovered={canDrop}
-                isInvalidHover={invalidDrop}
-                zoneRef={(element) => {
-                  zoneRefs.current[index] = element
-                }}
-                onClear={() => onClearWaypoint(index)}
-                onRemove={waypoints.length > 2 ? () => onRemoveWaypoint(index) : undefined}
-              />
-            </div>
-
-            {index < waypoints.length - 1 && (
-              <div className="fc-connector">
-                {[0, 1, 2].map((marker) => (
-                  <div
-                    key={marker}
-                    className={cn(
-                      'fc-connector-marker',
-                      waypoints[index] && waypoints[index + 1] ? 'opacity-90' : 'opacity-25',
-                    )}
-                  />
-                ))}
+            <Fragment key={index}>
+              <div className="fc-waypoint-stop">
+                <DropZone
+                  index={index}
+                  totalStops={waypoints.length}
+                  planet={planet}
+                  isHovered={canDrop}
+                  isInvalidHover={invalidDrop}
+                  zoneRef={(element) => {
+                    zoneRefs.current[index] = element
+                  }}
+                  onClear={() => onClearWaypoint(index)}
+                  onRemove={waypoints.length > 2 ? () => onRemoveWaypoint(index) : undefined}
+                />
               </div>
-            )}
-          </Fragment>
+
+              {index < waypoints.length - 1 && (
+                <div className="fc-connector">
+                  {[0, 1, 2].map((marker) => (
+                    <div
+                      key={marker}
+                      className={cn(
+                        'fc-connector-marker',
+                        waypoints[index] && waypoints[index + 1] ? 'opacity-90' : 'opacity-25',
+                      )}
+                    />
+                  ))}
+                </div>
+              )}
+            </Fragment>
           )
         })}
 

@@ -2,9 +2,8 @@ import type { CSSProperties } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
 import { MapPin, Rocket, Satellite, X } from 'lucide-react'
 import type { Planet } from '@nasa-fuel/shared'
-import { stopLabel, ui } from '@/constants/ui'
 import { PlanetOrb } from '@/components/fuel-calculator/PlanetOrb'
-import { PLANET_CONFIG } from '@/lib/planetConfig'
+import { useLocale } from '@/context/LocaleContext'
 import { cn } from '@/lib/utils'
 
 function stopAccent(index: number, total: number): { color: string; rgb: string } {
@@ -34,8 +33,9 @@ function DropZone({
   onClear,
   onRemove,
 }: DropZoneProps) {
+  const { ui } = useLocale()
   const { color: accentColor, rgb: accentRgb } = stopAccent(index, totalStops)
-  const label = stopLabel(index, totalStops)
+  const label = ui.stopLabel(index, totalStops)
 
   const zoneStyle = {
     '--fc-accent': accentColor,
@@ -75,7 +75,7 @@ function DropZone({
             className="flex flex-col items-center gap-2.5"
           >
             <PlanetOrb planet={planet} size={96} glow />
-            <span className="fc-planet-name-lg">{PLANET_CONFIG[planet].label}</span>
+            <span className="fc-planet-name-lg">{ui.PLANETS[planet]}</span>
           </motion.div>
         ) : (
           <motion.div

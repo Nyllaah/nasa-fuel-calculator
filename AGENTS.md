@@ -6,16 +6,16 @@ Interplanetary fuel calculator for the NEX Energy full-stack code challenge. Use
 
 ## Tech Stack
 
-| Layer | Technology |
-| ----- | ---------- |
-| Monorepo | npm workspaces |
-| Language | TypeScript (strict) |
-| Frontend | React, Vite, shadcn/ui, Tailwind CSS |
-| Backend | Node.js, WebSockets (`ws`) |
+| Layer      | Technology                                                   |
+| ---------- | ------------------------------------------------------------ |
+| Monorepo   | npm workspaces                                               |
+| Language   | TypeScript (strict)                                          |
+| Frontend   | React, Vite, shadcn/ui, Tailwind CSS                         |
+| Backend    | Node.js, WebSockets (`ws`)                                   |
 | Validation | Zod (`packages/shared` schemas; apps map errors to messages) |
-| Testing | Vitest (`packages/fuel-core`) |
-| Formatting | Prettier (no semicolons) |
-| Linting | ESLint (monorepo root) |
+| Testing    | Vitest (`packages/fuel-core`)                                |
+| Formatting | Prettier (no semicolons)                                     |
+| Linting    | ESLint (monorepo root)                                       |
 
 **Runtime:** Node.js with native ESM (`"type": "module"`). Packages compile with `tsc`; the client bundles with Vite.
 
@@ -37,12 +37,12 @@ nasa-fuel-calculator/
 
 ## Package Boundaries
 
-| Package | Responsibility |
-| ------- | -------------- |
-| `packages/fuel-core` | All fuel calculation logic. Pure functions only. |
-| `packages/shared` | Shared types, domain constants (`ACTIONS`, `PLANETS`, `GRAVITY`), and Zod WS schemas. |
-| `apps/server` | WebSocket transport, Zod validation, error messages, calls `fuel-core`. |
-| `apps/client` | React UI. Flight path builder, mass input, displays results. No calculation logic. |
+| Package              | Responsibility                                                                        |
+| -------------------- | ------------------------------------------------------------------------------------- |
+| `packages/fuel-core` | All fuel calculation logic. Pure functions only.                                      |
+| `packages/shared`    | Shared types, domain constants (`ACTIONS`, `PLANETS`, `GRAVITY`), and Zod WS schemas. |
+| `apps/server`        | WebSocket transport, Zod validation, error messages, calls `fuel-core`.               |
+| `apps/client`        | React UI. Flight path builder, mass input, displays results. No calculation logic.    |
 
 ## Dev Commands
 
@@ -64,12 +64,12 @@ npm run test -w @nasa-fuel/fuel-core
 
 ## Naming Conventions
 
-| Kind | Style | Example |
-| ---- | ----- | ------- |
+| Kind                           | Style                  | Example                               |
+| ------------------------------ | ---------------------- | ------------------------------------- |
 | Constant maps / lookup objects | `SCREAMING_SNAKE` keys | `errors.INVALID_JSON`, `FUEL_FORMULA` |
-| Variables, functions, types | `camelCase` | `flightPath`, `calculateFuel` |
-| Domain string literals | lowercase | `'earth'`, `'launch'` |
-| JSON / TypeScript fields | `camelCase` | `flightPath`, `totalFuel` |
+| Variables, functions, types    | `camelCase`            | `flightPath`, `calculateFuel`         |
+| Domain string literals         | lowercase              | `'earth'`, `'launch'`                 |
+| JSON / TypeScript fields       | `camelCase`            | `flightPath`, `totalFuel`             |
 
 Server error messages live in `apps/server/src/constants/errors.ts` — not in `shared` or `fuel-core`.
 
@@ -79,13 +79,13 @@ Client error messages live in `apps/client/src/constants/errors.ts` — not in `
 
 Export symbols from their **source module** only. Do not re-export through consumers.
 
-| Symbol | Import from |
-| ------ | ----------- |
-| `fuelRequestSchema`, `fuelMessageSchema`, shared types | `@nasa-fuel/shared` |
-| `validateRequest` | `apps/server/src/validate.ts` |
-| `ConnectionStatus` | `apps/client/src/hooks/useWebSocket.ts` |
-| Server `errors` | `apps/server/src/constants/errors.ts` |
-| Client `errors` | `apps/client/src/constants/errors.ts` |
+| Symbol                                                 | Import from                             |
+| ------------------------------------------------------ | --------------------------------------- |
+| `fuelRequestSchema`, `fuelMessageSchema`, shared types | `@nasa-fuel/shared`                     |
+| `validateRequest`                                      | `apps/server/src/validate.ts`           |
+| `ConnectionStatus`                                     | `apps/client/src/hooks/useWebSocket.ts` |
+| Server `errors`                                        | `apps/server/src/constants/errors.ts`   |
+| Client `errors`                                        | `apps/client/src/constants/errors.ts`   |
 
 A file exports only what it **defines** or **implements**. If a symbol moves (e.g. schema into `shared`), update call sites — do not leave a re-export behind in the old file.
 
@@ -122,11 +122,11 @@ Process the flight path **in reverse order**. Later legs do not carry fuel from 
 
 Results must match exactly:
 
-| Mission | Mass (kg) | Total Fuel (kg) |
-| ------- | --------- | --------------- |
-| Apollo 11 | 28,801 | 51,898 |
-| Mars Mission | 14,606 | 33,388 |
-| Passenger Ship | 75,432 | 212,161 |
+| Mission        | Mass (kg) | Total Fuel (kg) |
+| -------------- | --------- | --------------- |
+| Apollo 11      | 28,801    | 51,898          |
+| Mars Mission   | 14,606    | 33,388          |
+| Passenger Ship | 75,432    | 212,161         |
 
 Apollo 11 path: Launch Earth → Land Moon → Launch Moon → Land Earth.
 
@@ -149,9 +149,7 @@ Server responds on success:
 ```json
 {
   "totalFuel": 51898,
-  "breakdown": [
-    { "action": "launch", "planet": "earth", "fuel": 32988 }
-  ]
+  "breakdown": [{ "action": "launch", "planet": "earth", "fuel": 32988 }]
 }
 ```
 

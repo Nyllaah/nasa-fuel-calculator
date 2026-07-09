@@ -1,8 +1,8 @@
 import { fuelErrorSchema, fuelMessageSchema, fuelResponseSchema } from '@nasa-fuel/shared'
+import type { ClientErrorCode } from '@/constants/errors'
 import type { FuelError, FuelMessage, FuelResponse } from '@nasa-fuel/shared'
-import { errors } from '@/constants/errors'
 
-export type ParseFuelMessageFailure = { ok: false; error: string }
+export type ParseFuelMessageFailure = { ok: false; errorCode: ClientErrorCode }
 
 export type ParseFuelMessageResult = { ok: true; message: FuelMessage } | ParseFuelMessageFailure
 
@@ -27,9 +27,9 @@ function parseFuelMessage(data: string): ParseFuelMessageResult {
       return { ok: true, message: result.data }
     }
 
-    return { ok: false, error: errors.INVALID_RESPONSE }
+    return { ok: false, errorCode: 'INVALID_RESPONSE' }
   } catch {
-    return { ok: false, error: errors.INVALID_RESPONSE }
+    return { ok: false, errorCode: 'INVALID_RESPONSE' }
   }
 }
 

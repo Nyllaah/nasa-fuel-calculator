@@ -21,8 +21,7 @@ function StarField() {
           width: star.size,
           height: star.size,
           opacity: star.opacity,
-          boxShadow:
-            star.size > 1.4 ? `0 0 ${star.size * 2}px rgba(255,255,255,0.5)` : undefined,
+          boxShadow: star.size > 1.4 ? `0 0 ${star.size * 2}px rgba(255,255,255,0.5)` : undefined,
           '--star-dur': `${star.dur}s`,
           '--star-delay': `${star.delay}s`,
         } as CSSProperties

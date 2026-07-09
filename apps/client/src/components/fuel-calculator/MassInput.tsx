@@ -1,5 +1,4 @@
-import { errors } from '@/constants/errors'
-import { ui } from '@/constants/ui'
+import { useLocale } from '@/context/LocaleContext'
 import { isValidMass } from '@/lib/mass'
 import { cn } from '@/lib/utils'
 
@@ -9,6 +8,7 @@ type MassInputProps = {
 }
 
 function MassInput({ mass, onMassChange }: MassInputProps) {
+  const { ui, errors } = useLocale()
   const invalid = !isValidMass(mass)
 
   return (

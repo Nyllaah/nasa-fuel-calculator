@@ -1,21 +1,27 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { Satellite } from 'lucide-react'
 import type { FuelResponse, Planet } from '@nasa-fuel/shared'
-import { canPlaceWaypointAt, canPlacePlanetAnywhere, wouldRemoveWaypointCreateSamePlanetLeg } from '@nasa-fuel/shared'
-import { ui } from '@/constants/ui'
-import { errors } from '@/constants/errors'
+import {
+  canPlaceWaypointAt,
+  canPlacePlanetAnywhere,
+  wouldRemoveWaypointCreateSamePlanetLeg,
+} from '@nasa-fuel/shared'
 import { ConnectionIndicator } from '@/components/fuel-calculator/ConnectionIndicator'
+import { LanguageSelect } from '@/components/fuel-calculator/LanguageSelect'
 import { PlanetPalette, WaypointStrip } from '@/components/fuel-calculator/FlightPathBuilder'
 import { MassInput } from '@/components/fuel-calculator/MassInput'
 import { ResultsPanel } from '@/components/fuel-calculator/ResultsPanel'
 import { StarField } from '@/components/fuel-calculator/StarField'
+import { useLocale } from '@/context/LocaleContext'
 import { useFuelCalculator } from '@/hooks/useFuelCalculator'
 import { pointToRectDist } from '@/lib/format'
 import { isFuelError, isFuelResponse } from '@/lib/parseFuelMessage'
 import { isWaypointRouteReady, isWaypointsComplete, waypointsToFlightPath } from '@/lib/waypoints'
 
 function FuelCalculator() {
-  const { mass, setMass, setFlightPath, result, status, error, isCalculating } = useFuelCalculator()
+  const { ui, errors } = useLocale()
+  const { mass, setMass, setFlightPath, result, status, errorCode, isCalculating } =
+    useFuelCalculator()
 
   const [waypoints, setWaypoints] = useState<(Planet | null)[]>([null, null])
   const [dragging, setDragging] = useState<Planet | null>(null)
@@ -95,7 +101,7 @@ function FuelCalculator() {
   const fuelResult: FuelResponse | null = result && isFuelResponse(result) ? result : null
 
   const displayError =
-    error ??
+    (errorCode ? errors[errorCode] : null) ??
     (routeInvalid ? errors.SAME_PLANET_LEG : null) ??
     (result && isFuelError(result) ? result.error : null)
 
@@ -109,7 +115,10 @@ function FuelCalculator() {
           <span className="fc-title">{ui.APP_TITLE}</span>
         </div>
 
-        <ConnectionIndicator status={status} />
+        <div className="flex items-center gap-3">
+          <LanguageSelect />
+          <ConnectionIndicator status={status} />
+        </div>
       </header>
 
       <main className="fc-main">
@@ -166,8 +175,8 @@ function FuelCalculator() {
         </div>
 
         <p className="fc-footer">
-          {ui.FOOTER_PREFIX}{' '}
-          <span className="fc-footer-accent">{ui.FOOTER_ADD_STOP}</span> {ui.FOOTER_SUFFIX}
+          {ui.FOOTER_PREFIX} <span className="fc-footer-accent">{ui.FOOTER_ADD_STOP}</span>{' '}
+          {ui.FOOTER_SUFFIX}
         </p>
       </main>
     </div>

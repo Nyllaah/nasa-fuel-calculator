@@ -3,9 +3,8 @@ import { Activity, AlertTriangle, Loader2 } from 'lucide-react'
 import type { FuelResponse } from '@nasa-fuel/shared'
 import { PlanetOrb } from '@/components/fuel-calculator/PlanetOrb'
 import type { ConnectionStatus } from '@/hooks/useWebSocket'
-import { actionLabel, ui } from '@/constants/ui'
+import { useLocale } from '@/context/LocaleContext'
 import { formatKg } from '@/lib/format'
-import { PLANET_CONFIG } from '@/lib/planetConfig'
 import { cn } from '@/lib/utils'
 
 type ResultsPanelProps = {
@@ -16,13 +15,8 @@ type ResultsPanelProps = {
   status: ConnectionStatus
 }
 
-function ResultsPanel({
-  result,
-  error,
-  allFilled,
-  isCalculating,
-  status,
-}: ResultsPanelProps) {
+function ResultsPanel({ result, error, allFilled, isCalculating, status }: ResultsPanelProps) {
+  const { ui } = useLocale()
   const empty = !allFilled
   const offline = allFilled && status !== 'connected'
 
@@ -92,7 +86,6 @@ function ResultsPanel({
             <div className="flex flex-col gap-2 border-t border-white/6 pt-3.5">
               <p className="fc-section-title">{ui.STEP_BREAKDOWN}</p>
               {result.breakdown.map((step, index) => {
-                const config = PLANET_CONFIG[step.planet]
                 const isLaunch = step.action === 'launch'
 
                 return (
@@ -105,7 +98,7 @@ function ResultsPanel({
                           isLaunch ? 'text-amber-500' : 'text-[#00d4ff]',
                         )}
                       >
-                        {actionLabel(step.action)} · {config.label}
+                        {ui.actionLabel(step.action)} · {ui.PLANETS[step.planet]}
                       </p>
                     </div>
                     <p className="fc-step-fuel">{formatKg(step.fuel)} kg</p>

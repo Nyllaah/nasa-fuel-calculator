@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
-import { errors } from '@/constants/errors'
+import type { ClientErrorCode } from '@/constants/errors'
 
 const INITIAL_RECONNECT_DELAY_MS = 1000
 const MAX_RECONNECT_DELAY_MS = 30_000
@@ -13,7 +13,7 @@ type UseWebSocketOptions = {
 
 export function useWebSocket({ url, onMessage }: UseWebSocketOptions) {
   const [status, setStatus] = useState<ConnectionStatus>('connecting')
-  const [error, setError] = useState<string | null>(null)
+  const [errorCode, setErrorCode] = useState<ClientErrorCode | null>(null)
 
   const socketRef = useRef<WebSocket | null>(null)
   const reconnectDelayRef = useRef(INITIAL_RECONNECT_DELAY_MS)
@@ -46,7 +46,7 @@ export function useWebSocket({ url, onMessage }: UseWebSocketOptions) {
       if (cancelled) return
 
       setStatus('connecting')
-      setError(null)
+      setErrorCode(null)
 
       const ws = new WebSocket(url)
       socketRef.current = ws
@@ -68,7 +68,7 @@ export function useWebSocket({ url, onMessage }: UseWebSocketOptions) {
         if (cancelled) return
 
         setStatus('error')
-        setError(errors.WEBSOCKET_CONNECTION)
+        setErrorCode('WEBSOCKET_CONNECTION')
       }
 
       ws.onclose = () => {
@@ -94,7 +94,7 @@ export function useWebSocket({ url, onMessage }: UseWebSocketOptions) {
     }
   }, [url])
 
-  return { status, error, send }
+  return { status, errorCode, send }
 }
 
 export type { ConnectionStatus }

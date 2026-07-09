@@ -1,5 +1,5 @@
 import type { ConnectionStatus } from '@/hooks/useWebSocket'
-import { ui } from '@/constants/ui'
+import { useLocale } from '@/context/LocaleContext'
 import { cn } from '@/lib/utils'
 
 type ConnectionIndicatorProps = {
@@ -21,6 +21,8 @@ const STATUS_DOT: Record<ConnectionStatus, string> = {
 }
 
 function ConnectionIndicator({ status }: ConnectionIndicatorProps) {
+  const { ui } = useLocale()
+
   return (
     <div className="fc-telemetry">
       <div className={cn('size-2 rounded-full', STATUS_DOT[status])} />

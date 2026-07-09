@@ -13,11 +13,7 @@ function hasSamePlanetLegInFlightPath(flightPath: FlightStep[]): boolean {
     const current = flightPath[index]
     const next = flightPath[index + 1]
 
-    if (
-      current.action === 'launch' &&
-      next.action === 'land' &&
-      current.planet === next.planet
-    ) {
+    if (current.action === 'launch' && next.action === 'land' && current.planet === next.planet) {
       return true
     }
   }
@@ -39,10 +35,7 @@ function canPlaceWaypointAt(
   return true
 }
 
-function canPlacePlanetAnywhere(
-  waypoints: readonly (Planet | null)[],
-  planet: Planet,
-): boolean {
+function canPlacePlanetAnywhere(waypoints: readonly (Planet | null)[], planet: Planet): boolean {
   return waypoints.some((_, index) => canPlaceWaypointAt(waypoints, index, planet))
 }
 
