@@ -61,7 +61,8 @@ export function useWebSocket({ url, onMessage }: UseWebSocketOptions) {
       ws.onmessage = (event) => {
         if (cancelled) return
 
-        onMessageRef.current(event.data as string)
+        const data = typeof event.data === 'string' ? event.data : event.data.toString()
+        onMessageRef.current(data)
       }
 
       ws.onerror = () => {

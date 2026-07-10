@@ -1,11 +1,10 @@
 import { Fragment, useEffect, useRef } from 'react'
 import { Plus, Rocket } from 'lucide-react'
 import type { Planet } from '@nasa-fuel/shared'
-import { canPlaceWaypointAt } from '@nasa-fuel/shared'
+import { PLANETS, canPlaceWaypointAt } from '@nasa-fuel/shared'
 import { DraggablePlanetCard } from '@/components/fuel-calculator/DraggablePlanetCard'
 import { DropZone } from '@/components/fuel-calculator/DropZone'
 import { useLocale } from '@/context/LocaleContext'
-import { PLANETS } from '@/lib/planetConfig'
 import { cn } from '@/lib/utils'
 
 type DragHandlers = {

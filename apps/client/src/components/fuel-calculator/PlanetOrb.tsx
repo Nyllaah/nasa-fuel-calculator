@@ -1,6 +1,7 @@
 import type { CSSProperties } from 'react'
 import type { Planet } from '@nasa-fuel/shared'
 import { PLANET_CONFIG } from '@/lib/planetConfig'
+import { useLocale } from '@/context/LocaleContext'
 import { cn } from '@/lib/utils'
 
 type PlanetOrbProps = {
@@ -11,6 +12,7 @@ type PlanetOrbProps = {
 }
 
 function PlanetOrb({ planet, size = 64, glow = false, dim = false }: PlanetOrbProps) {
+  const { ui } = useLocale()
   const config = PLANET_CONFIG[planet]
 
   const style: CSSProperties = {
@@ -23,7 +25,7 @@ function PlanetOrb({ planet, size = 64, glow = false, dim = false }: PlanetOrbPr
 
   return (
     <div className={cn('fc-orb', dim && 'opacity-30')} style={style}>
-      <img src={config.image} alt={config.label} draggable={false} className="fc-orb-image" />
+      <img src={config.image} alt={ui.PLANETS[planet]} draggable={false} className="fc-orb-image" />
     </div>
   )
 }

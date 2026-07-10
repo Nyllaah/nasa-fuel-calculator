@@ -24,4 +24,4 @@ function isWaypointRouteReady(waypoints: (Planet | null)[]): waypoints is Planet
   return isWaypointsComplete(waypoints) && isValidWaypointRoute(waypoints)
 }
 
-export { waypointsToFlightPath, isWaypointsComplete, isValidWaypointRoute, isWaypointRouteReady }
+export { waypointsToFlightPath, isWaypointsComplete, isWaypointRouteReady }

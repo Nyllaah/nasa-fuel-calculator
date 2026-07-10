@@ -16,7 +16,7 @@ type ResultsPanelProps = {
 }
 
 function ResultsPanel({ result, error, allFilled, isCalculating, status }: ResultsPanelProps) {
-  const { ui } = useLocale()
+  const { locale, ui } = useLocale()
   const empty = !allFilled
   const offline = allFilled && status !== 'connected'
 
@@ -77,7 +77,7 @@ function ResultsPanel({ result, error, allFilled, isCalculating, status }: Resul
           >
             <div className="text-center">
               <p className="fc-fuel-label">{ui.TOTAL_PROPELLANT}</p>
-              <p className="fc-fuel-total">{formatKg(result.totalFuel)}</p>
+              <p className="fc-fuel-total">{formatKg(result.totalFuel, locale)}</p>
               <p className="fc-fuel-meta">
                 {ui.KG} &nbsp;·&nbsp; {(result.totalFuel / 1000).toFixed(1)} {ui.TONS}
               </p>
@@ -101,7 +101,7 @@ function ResultsPanel({ result, error, allFilled, isCalculating, status }: Resul
                         {ui.actionLabel(step.action)} · {ui.PLANETS[step.planet]}
                       </p>
                     </div>
-                    <p className="fc-step-fuel">{formatKg(step.fuel)} kg</p>
+                    <p className="fc-step-fuel">{formatKg(step.fuel, locale)} kg</p>
                   </div>
                 )
               })}

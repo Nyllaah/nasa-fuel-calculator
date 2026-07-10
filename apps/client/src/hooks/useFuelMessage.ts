@@ -11,6 +11,7 @@ export function useFuelMessage() {
     const parsed = parseFuelMessage(data)
 
     if (isParseFailure(parsed)) {
+      setResult(null)
       setErrorCode(parsed.errorCode)
       return
     }
@@ -19,5 +20,10 @@ export function useFuelMessage() {
     setErrorCode(null)
   }, [])
 
-  return { result, errorCode, handleMessage }
+  const clearResult = useCallback(() => {
+    setResult(null)
+    setErrorCode(null)
+  }, [])
+
+  return { result, errorCode, handleMessage, clearResult }
 }

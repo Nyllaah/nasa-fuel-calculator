@@ -21,7 +21,7 @@ export function useFuelCalculator() {
   const [flightPath, setFlightPath] = useState<FlightStep[]>([])
   const [isCalculating, setIsCalculating] = useState(false)
 
-  const { result, errorCode: messageErrorCode, handleMessage } = useFuelMessage()
+  const { result, errorCode: messageErrorCode, handleMessage, clearResult } = useFuelMessage()
 
   const onMessage = useCallback(
     (data: string) => {
@@ -57,7 +57,8 @@ export function useFuelCalculator() {
     }
 
     setIsCalculating(false)
-  }, [status, mass, flightPath, send])
+    clearResult()
+  }, [status, mass, flightPath, send, clearResult])
 
   return {
     mass,

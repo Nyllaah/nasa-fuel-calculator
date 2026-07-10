@@ -1,5 +1,5 @@
-function formatKg(value: number): string {
-  return value.toLocaleString('pt-BR')
+function formatKg(value: number, locale: string): string {
+  return value.toLocaleString(locale)
 }
 
 function pointToRectDist(point: { x: number; y: number }, rect: DOMRect): number {
