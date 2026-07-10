@@ -1,9 +1,9 @@
-import { z } from 'zod'
+import type { ZodError } from 'zod'
 import { fuelRequestSchema, hasSamePlanetLegInFlightPath } from '@nasa-fuel/shared'
 import type { FuelRequest } from '@nasa-fuel/shared'
 import { errors } from './constants/errors.js'
 
-function formatZodError(error: z.ZodError): string {
+function formatZodError(error: ZodError): string {
   const issue = error.issues[0]
 
   if (!issue) {
@@ -26,7 +26,7 @@ function formatZodError(error: z.ZodError): string {
     return errors.INVALID_PLANET(String(issue.received))
   }
 
-  return issue.message
+  return errors.INVALID_PAYLOAD
 }
 
 export function validateRequest(data: unknown): FuelRequest | string {
