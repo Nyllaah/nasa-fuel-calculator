@@ -3,8 +3,8 @@ import type { FlightStep } from '@nasa-fuel/shared'
 import { calculateFuel, recursiveFuel, stepFuel } from './calculate.js'
 
 describe('stepFuel', () => {
-  it('calculates Earth landing fuel for 28801 kg', () => {
-    expect(stepFuel(28801, 'land', 'earth')).toBe(13447)
+  it('calculates base Earth landing fuel for 28801 kg (no recursion)', () => {
+    expect(stepFuel(28801, 'land', 'earth')).toBe(9278)
   })
 })
 

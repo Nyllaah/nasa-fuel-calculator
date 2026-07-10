@@ -1,5 +1,7 @@
 # NASA Fuel Calculator
 
+- For a PT-BR version of this README, refer to the end of this file.
+
 Interplanetary fuel calculator for the NEX Energy full-stack code challenge. Build a flight path, enter spacecraft mass, and get fuel requirements updated in real time over WebSockets.
 
 ## Prerequisites
@@ -26,7 +28,7 @@ npm run dev
 
 Vite + React SPA with a drag-and-drop route builder. Fuel results update in real time over WebSockets — there is no submit button.
 
-The UI is in Brazilian Portuguese (`apps/client/src/constants/ui.ts`).
+The UI supports English and Brazilian Portuguese. Use the **language dropdown** in the header to switch (`apps/client/src/constants/ui.ts`, `apps/client/src/constants/errors.ts`). Default locale is `pt-BR` (persisted in `localStorage`). Client-side errors are localized; server WebSocket errors are returned in English.
 
 ### Configuration
 
@@ -40,17 +42,27 @@ Change `VITE_WS_URL` if the server runs on another host or port.
 
 ### Using the UI
 
-1. **Connection** — the header shows link status (connecting, connected, disconnected).
+1. **Connection** — the header shows link status (connecting, connected, disconnected, error) and the language selector.
 2. **Build a route** — drag planets from the palette into the drop zones:
    - First stop = launch origin
    - Last stop = final landing
    - Middle stops = intermediate destinations
-   - Use **+ Adicionar parada** for multi-leg missions (up to 6 stops)
+   - Use **+ Add stop** (or **+ Adicionar parada** in Portuguese) for multi-leg missions (up to 6 stops)
    - You cannot place the same planet on consecutive stops
 3. **Enter mass** — dry spacecraft mass in kg (payload + structure, no propellant). Invalid values show an inline warning and are not sent to the server.
-4. **View results** — total propellant and a per-step breakdown appear automatically when the route is complete and the server is connected.
+4. **View results** — total propellant and a per-step breakdown appear automatically when the route is complete and the server is connected. A **Calculating…** indicator shows while waiting for the server response.
+
+The app starts with two empty stops and a default mass of 28,801 kg. Results are not shown until every stop is filled.
+
+**Stops → API steps:** each pair of consecutive stops becomes a launch/land leg. For example, `Earth → Moon → Earth` sends:
+
+```text
+launch earth → land moon → launch moon → land earth
+```
 
 ### Example: Apollo 11
+
+Build this route manually in the UI (the app does not pre-fill it on load):
 
 | Field               | Value                |
 | ------------------- | -------------------- |
@@ -68,15 +80,17 @@ Requires a running WebSocket server at `VITE_WS_URL`.
 
 ## Scripts
 
-| Command              | Description                                                  |
-| -------------------- | ------------------------------------------------------------ |
-| `npm run dev`        | Build shared packages, then start server and client together |
-| `npm run dev:server` | Server only (`ws://localhost:3001`)                          |
-| `npm run dev:client` | Client only (`http://localhost:5173`)                        |
-| `npm run build`      | Build all packages and apps                                  |
-| `npm run test`       | Run fuel calculation tests (Vitest)                          |
-| `npm run lint`       | ESLint across the monorepo                                   |
-| `npm run format`     | Format code with Prettier                                    |
+| Command                | Description                                                  |
+| ---------------------- | ------------------------------------------------------------ |
+| `npm run dev`          | Build shared packages, then start server and client together |
+| `npm run dev:server`   | Rebuild shared packages, then server only (`ws://localhost:3001`) |
+| `npm run dev:client`   | Client only (`http://localhost:5173`; does not rebuild packages) |
+| `npm run build`        | Build all packages and apps                                  |
+| `npm run test`         | Rebuild shared packages, then run Vitest across workspaces   |
+| `npm run lint`         | ESLint across the monorepo                                   |
+| `npm run lint:fix`     | ESLint with auto-fix                                         |
+| `npm run format`       | Format code with Prettier                                    |
+| `npm run format:check` | Check formatting without writing files                       |
 
 ## Project Structure
 
@@ -87,7 +101,7 @@ nasa-fuel-calculator/
 │   └── server/          # Node.js WebSocket server
 ├── packages/
 │   ├── fuel-core/       # Fuel calculation logic + tests
-│   └── shared/          # Shared types and domain constants
+│   └── shared/          # Shared types, constants, and flight-path validation
 └── package.json         # npm workspaces root
 ```
 
@@ -111,19 +125,28 @@ The server validates incoming messages with Zod, calculates fuel via `@nasa-fuel
 }
 ```
 
-**Success response:**
+**Success response** (example for Earth → Moon with mass 28,801 kg):
 
 ```json
 {
-  "totalFuel": 51898,
-  "breakdown": [{ "action": "launch", "planet": "earth", "fuel": 32988 }]
+  "totalFuel": 22380,
+  "breakdown": [
+    { "action": "launch", "planet": "earth", "fuel": 20845 },
+    { "action": "land", "planet": "moon", "fuel": 1535 }
+  ]
 }
 ```
 
-**Error response:**
+The UI derives `flightPath` from waypoint stops before sending (see [Using the UI](#using-the-ui)).
+
+**Error responses:**
 
 ```json
 { "error": "Mass must be a positive number" }
+```
+
+```json
+{ "error": "Launch and land cannot be on the same planet" }
 ```
 
 ### Run server only
@@ -223,7 +246,7 @@ npm run dev
 
 SPA em Vite + React com construtor de rota por arrastar e soltar. Os resultados de combustível são atualizados em tempo real via WebSockets — não há botão de envio.
 
-A interface está em português brasileiro (`apps/client/src/constants/ui.ts`).
+A interface suporta inglês e português brasileiro. Use o **seletor de idioma** no cabeçalho para alternar (`apps/client/src/constants/ui.ts`, `apps/client/src/constants/errors.ts`). O idioma padrão é `pt-BR` (persistido em `localStorage`). Erros do lado do cliente são localizados; erros do servidor WebSocket são retornados em inglês.
 
 ### Configuração
 
@@ -237,17 +260,27 @@ Altere `VITE_WS_URL` se o servidor estiver em outro host ou porta.
 
 ### Como usar a interface
 
-1. **Conexão** — o cabeçalho exibe o status do link (conectando, conectado, desconectado).
+1. **Conexão** — o cabeçalho exibe o status do link (conectando, conectado, desconectado, erro) e o seletor de idioma.
 2. **Montar a rota** — arraste planetas da paleta para as zonas de pouso:
    - Primeira parada = origem da decolagem
    - Última parada = pouso final
    - Paradas intermediárias = destinos no meio do trajeto
-   - Use **+ Adicionar parada** para missões com vários trechos (até 6 paradas)
+   - Use **+ Adicionar parada** (ou **+ Add stop** em inglês) para missões com vários trechos (até 6 paradas)
    - Não é permitido colocar o mesmo planeta em paradas consecutivas
 3. **Informar a massa** — massa seca da nave em kg (carga útil + estrutura, sem propelente). Valores inválidos exibem aviso inline e não são enviados ao servidor.
-4. **Ver resultados** — propelente total e detalhamento por etapa aparecem automaticamente quando a rota está completa e o servidor está conectado.
+4. **Ver resultados** — propelente total e detalhamento por etapa aparecem automaticamente quando a rota está completa e o servidor está conectado. Um indicador **Calculando…** aparece enquanto aguarda a resposta do servidor.
+
+O app inicia com duas paradas vazias e massa padrão de 28.801 kg. Os resultados só aparecem quando todas as paradas estão preenchidas.
+
+**Paradas → etapas da API:** cada par de paradas consecutivas vira um trecho decolagem/pouso. Por exemplo, `Terra → Lua → Terra` envia:
+
+```text
+launch earth → land moon → launch moon → land earth
+```
 
 ### Exemplo: Apollo 11
+
+Monte esta rota manualmente na interface (o app não pré-preenche ao carregar):
 
 | Campo                      | Valor               |
 | -------------------------- | ------------------- |
@@ -265,15 +298,17 @@ Requer um servidor WebSocket em execução em `VITE_WS_URL`.
 
 ## Scripts
 
-| Comando              | Descrição                                                            |
-| -------------------- | -------------------------------------------------------------------- |
-| `npm run dev`        | Compila os pacotes compartilhados e inicia servidor e cliente juntos |
-| `npm run dev:server` | Apenas o servidor (`ws://localhost:3001`)                            |
-| `npm run dev:client` | Apenas o cliente (`http://localhost:5173`)                           |
-| `npm run build`      | Compila todos os pacotes e apps                                      |
-| `npm run test`       | Executa os testes de cálculo de combustível (Vitest)                 |
-| `npm run lint`       | ESLint em todo o monorepo                                            |
-| `npm run format`     | Formata o código com Prettier                                        |
+| Comando                | Descrição                                                            |
+| ---------------------- | -------------------------------------------------------------------- |
+| `npm run dev`          | Compila os pacotes compartilhados e inicia servidor e cliente juntos |
+| `npm run dev:server`   | Recompila pacotes compartilhados, depois apenas o servidor (`ws://localhost:3001`) |
+| `npm run dev:client`   | Apenas o cliente (`http://localhost:5173`; não recompila pacotes)  |
+| `npm run build`        | Compila todos os pacotes e apps                                      |
+| `npm run test`         | Recompila pacotes compartilhados e executa Vitest nos workspaces     |
+| `npm run lint`         | ESLint em todo o monorepo                                            |
+| `npm run lint:fix`     | ESLint com correção automática                                       |
+| `npm run format`       | Formata o código com Prettier                                        |
+| `npm run format:check` | Verifica formatação sem alterar arquivos                             |
 
 ## Estrutura do projeto
 
@@ -284,7 +319,7 @@ nasa-fuel-calculator/
 │   └── server/          # Servidor WebSocket Node.js
 ├── packages/
 │   ├── fuel-core/       # Lógica de cálculo de combustível + testes
-│   └── shared/          # Tipos compartilhados e constantes de domínio
+│   └── shared/          # Tipos compartilhados, constantes e validação de rota
 └── package.json         # Raiz do monorepo npm workspaces
 ```
 
@@ -308,19 +343,28 @@ O servidor valida mensagens recebidas com Zod, calcula o combustível via `@nasa
 }
 ```
 
-**Resposta de sucesso:**
+**Resposta de sucesso** (exemplo para Terra → Lua com massa 28.801 kg):
 
 ```json
 {
-  "totalFuel": 51898,
-  "breakdown": [{ "action": "launch", "planet": "earth", "fuel": 32988 }]
+  "totalFuel": 22380,
+  "breakdown": [
+    { "action": "launch", "planet": "earth", "fuel": 20845 },
+    { "action": "land", "planet": "moon", "fuel": 1535 }
+  ]
 }
 ```
 
-**Resposta de erro:**
+A interface deriva `flightPath` a partir das paradas antes de enviar (veja [Como usar a interface](#como-usar-a-interface)).
+
+**Respostas de erro:**
 
 ```json
 { "error": "Mass must be a positive number" }
+```
+
+```json
+{ "error": "Launch and land cannot be on the same planet" }
 ```
 
 ### Executar só o servidor
