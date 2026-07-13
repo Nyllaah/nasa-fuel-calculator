@@ -1,6 +1,6 @@
 # NASA Fuel Calculator
 
-- For a PT-BR version of this README, refer to the end of this file.
+- Para o README.md em PT-BR, refira-se ao fim desde arquivo.
 
 Interplanetary fuel calculator for the NEX Energy full-stack code challenge. Build a flight path, enter spacecraft mass, and get fuel requirements updated in real time over WebSockets.
 
