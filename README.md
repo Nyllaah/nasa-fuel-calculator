@@ -1,5 +1,8 @@
 # NASA Fuel Calculator
 
+<img width="1536" height="1024" alt="ChatGPT Image 13 de jul  de 2026, 14_16_13" src="https://github.com/user-attachments/assets/2d4a43a9-ee9e-46a5-9080-ed50ad614bbd" />
+
+
 - Para o README.md em PT-BR, refira-se ao fim desde arquivo.
 
 Interplanetary fuel calculator for the NEX Energy full-stack code challenge. Build a flight path, enter spacecraft mass, and get fuel requirements updated in real time over WebSockets.
